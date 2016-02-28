@@ -97,10 +97,10 @@
 		8CFEC6811C83B77200C07B76 /* Shuttle_Application */ = {
 			isa = PBXGroup;
 			children = (
-				8CFEC6821C83B77300C07B76 /* AppDelegate.swift */,
 				8CFEC6841C83B77300C07B76 /* ViewController.swift */,
 				8CFEC6861C83B77400C07B76 /* Main.storyboard */,
 				8CFEC6891C83B77400C07B76 /* Assets.xcassets */,
+				8CFEC6821C83B77300C07B76 /* AppDelegate.swift */,
 				8CFEC68B1C83B77400C07B76 /* LaunchScreen.storyboard */,
 				8CFEC68E1C83B77400C07B76 /* Info.plist */,
 			);
