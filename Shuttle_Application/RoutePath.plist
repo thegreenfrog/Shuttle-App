@@ -1,24 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>Druck Start</key>
+<array>
 	<string>{43.909090,-69.959227}</string>
-	<key>Stowe Inn</key>
 	<string>{43.912766,-69.961109}</string>
-	<key>School St</key>
 	<string>{43.914538,-69.963460}</string>
-	<key>Searles</key>
 	<string>{43.909514,-69.963621}</string>
-	<key>HL Library</key>
 	<string>{43.907056,-69.964742}</string>
-	<key>Mayflower</key>
 	<string>{43.905188,-69.969225}</string>
-	<key>Brunswick Apartments</key>
 	<string>{43.904016,-69.965778}</string>
-	<key>52 Harpswell</key>
 	<string>{43.906031,-69.957542}</string>
-	<key>Druck</key>
 	<string>{43.909090,-69.959227}</string>
-</dict>
+</array>
 </plist>
