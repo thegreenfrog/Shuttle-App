@@ -7,8 +7,14 @@
 //
 
 import UIKit
+import CoreLocation
 
 class RequestTableViewController: UITableViewController {
+    
+    var requestLocations: [CLLocationCoordinate2D] = []
+    var requestNames: [String] = []
+    
+    var requestLog = RequestLog()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +24,14 @@ class RequestTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if(requestLog.moreRequests(requestLocations.count)) {
+            (requestNames, requestLocations) = requestLog.getAllRequests()
+            self.tableView.reloadData()
+        }
+        print(requestNames.count)
     }
 
     override func didReceiveMemoryWarning() {
@@ -29,23 +43,23 @@ class RequestTableViewController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        return requestLocations.count
     }
 
-    /*
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
+        let cell = tableView.dequeueReusableCellWithIdentifier("requestCell", forIndexPath: indexPath)
+        cell.detailTextLabel!.text = requestNames[indexPath.row]
+        cell.textLabel!.text = "\(requestLocations[indexPath.row].latitude)"
 
         return cell
     }
-    */
+
 
     /*
     // Override to support conditional editing of the table view.

@@ -26,16 +26,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         case Satellite
     }
     
+    var requestLog = RequestLog()
+    var geoCoder = CLGeocoder()
+    
     let locationManager = CLLocationManager()
     var resetViewLocation = true//only recenters user view of map at the start
     
     var pinImage:UIImageView?
-    var pinLabel:UILabel?
+    var pinLabel:UIButton?
 
     @IBOutlet weak var mapSegmentedControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
     
-    // MARK: - Lifecycle
+    @IBOutlet weak var address: UILabel!
+    var currentAddress: String?
+    
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last! as CLLocation
@@ -52,6 +57,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print(error)
     }
+    
+    //user wants to get picked up at curent center location in map
+    func pickUpPerson(sender: UIButton!) {
+        let pickUpLoc = self.mapView.centerCoordinate
+        requestLog.addRequest(currentAddress!, location: pickUpLoc)
+    }
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,14 +93,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         self.view.addSubview(pinImage!)
         
         //create label above pin
-        pinLabel = UILabel(frame: Constants.pinLabelFrame)
+        pinLabel = UIButton(frame: Constants.pinLabelFrame)
         pinLabel!.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
         pinLabel!.center = CGPoint(x: self.view.center.x, y: self.view.center.y-60)
-        pinLabel!.text = "Set a pickup location"
-        pinLabel!.textColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
-        pinLabel!.textAlignment = .Center
+        pinLabel!.setTitle("Set a pickup location", forState: .Normal)
+        pinLabel!.setTitleColor(UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0), forState: .Normal)
         pinLabel!.layer.masksToBounds = true
         pinLabel!.layer.cornerRadius = 20
+        pinLabel?.addTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
         self.view.addSubview(pinLabel!)
         
         let dropPinGesture = UILongPressGestureRecognizer(target: self, action: Selector("dropPin:"))
@@ -105,6 +118,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // MARK: - Map Functions
 
     @IBAction func changeMapType(sender: UISegmentedControl) {
         let mapType = MapType(rawValue: mapSegmentedControl.selectedSegmentIndex)
@@ -115,19 +130,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             mapView.mapType = MKMapType.Hybrid
         case .Satellite:
             mapView.mapType = MKMapType.Satellite
-        }
-    }
-    
-    func dropStopLocationPins() {
-        let thePath = NSBundle.mainBundle().pathForResource("RouteCoord", ofType: "plist")
-        let pointsDict = NSDictionary(contentsOfFile: thePath!)
-        
-        for (name, location) in pointsDict! {
-            let p = CGPointFromString(location as! String)
-            let location = CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))
-            let pin = StopRequest(title: name as! String, locationName: "Bowdoin", coordinate: location)
-            
-            mapView.addAnnotation(pin)
         }
     }
     
@@ -162,9 +164,45 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             return MKPolylineRenderer()
         }
     }
+    
+    func coordToGeo(loc: CLLocation) {
+        //Only one reverse geocoding can be in progress at a time so we need to cancel any existing ones
+        
+        geoCoder.cancelGeocode()
+        geoCoder.reverseGeocodeLocation(loc, completionHandler: { (data, error) -> Void in
+            guard let placeMarks = data as [CLPlacemark]! else {
+                return
+            }
+            let loc: CLPlacemark = placeMarks[0]
+            let addressDict : [NSString:NSObject] = loc.addressDictionary as! [NSString: NSObject]
+            let addrList = addressDict["FormattedAddressLines"] as! [String]
+            let address = addrList.joinWithSeparator(", ")
+            print(address)
+            self.address.text = address
+            self.currentAddress = address
+        })
+    }
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let location = CLLocation(latitude: mapView.centerCoordinate.latitude, longitude: mapView.centerCoordinate.longitude)
+        coordToGeo(location)
+    }
 
     
-    // MARK: - Pin Annotation Functioons
+    // MARK: - Pin Functions
+    
+    func dropStopLocationPins() {
+        let thePath = NSBundle.mainBundle().pathForResource("RouteCoord", ofType: "plist")
+        let pointsDict = NSDictionary(contentsOfFile: thePath!)
+        
+        for (name, location) in pointsDict! {
+            let p = CGPointFromString(location as! String)
+            let location = CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))
+            let pin = StopRequest(title: name as! String, locationName: "Bowdoin", coordinate: location)
+            
+            mapView.addAnnotation(pin)
+        }
+    }
     
     func dropPin(gesture: UILongPressGestureRecognizer) {
         if gesture.state == UIGestureRecognizerState.Began {
