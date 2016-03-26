@@ -11,6 +11,7 @@
 		8C0042E51C9288E2007D4FEC /* RequestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */; };
 		8C0042E91C9997DF007D4FEC /* MapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042E81C9997DF007D4FEC /* MapViewController.xib */; };
 		8C0042EB1CA49696007D4FEC /* RequestTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */; };
+		8C08BA6B1CA6B311001DC98F /* RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C08BA6A1CA6B311001DC98F /* RequestCell.swift */; };
 		8CFEC6831C83B77300C07B76 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFEC6821C83B77300C07B76 /* AppDelegate.swift */; };
 		8CFEC6881C83B77400C07B76 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CFEC6861C83B77400C07B76 /* Main.storyboard */; };
 		8CFEC68A1C83B77400C07B76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CFEC6891C83B77400C07B76 /* Assets.xcassets */; };
@@ -45,6 +46,7 @@
 		8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTableViewController.swift; sourceTree = "<group>"; };
 		8C0042E81C9997DF007D4FEC /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
 		8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestTableViewController.xib; sourceTree = "<group>"; };
+		8C08BA6A1CA6B311001DC98F /* RequestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestCell.swift; sourceTree = "<group>"; };
 		8CFEC67F1C83B77200C07B76 /* Shuttle_Application.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shuttle_Application.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CFEC6821C83B77300C07B76 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8CFEC6871C83B77400C07B76 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				8CFEC6B21C83C09200C07B76 /* StopRequest.swift */,
 				8CFEC6B01C83B9ED00C07B76 /* MapViewController.swift */,
 				8C0042E81C9997DF007D4FEC /* MapViewController.xib */,
+				8C08BA6A1CA6B311001DC98F /* RequestCell.swift */,
 				8C0042E21C91C16A007D4FEC /* RequestLog.swift */,
 				8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */,
 				8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */,
@@ -281,6 +284,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CFEC6831C83B77300C07B76 /* AppDelegate.swift in Sources */,
+				8C08BA6B1CA6B311001DC98F /* RequestCell.swift in Sources */,
 				8CFEC6B11C83B9ED00C07B76 /* MapViewController.swift in Sources */,
 				8C0042E51C9288E2007D4FEC /* RequestTableViewController.swift in Sources */,
 				8C0042E31C91C16A007D4FEC /* RequestLog.swift in Sources */,

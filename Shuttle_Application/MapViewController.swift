@@ -64,7 +64,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
-        requestLog.addRequest(currentAddress!, location: pickUpLoc)
+        let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
+        requestLog.addRequest(newReq)
     }
     
     // MARK: - Lifecycle

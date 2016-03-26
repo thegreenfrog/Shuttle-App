@@ -11,9 +11,6 @@ import CoreLocation
 
 class RequestTableViewController: UITableViewController {
     
-    var requestLocations: [CLLocationCoordinate2D] = []
-    var requestNames: [String] = []
-    
     private var requestLog = RequestLog()
     private var tabBarVC = RequestTabBarController()
 
@@ -22,6 +19,7 @@ class RequestTableViewController: UITableViewController {
         
         tabBarVC = tabBarController as! RequestTabBarController
         requestLog = tabBarVC.request
+        self.tableView.registerClass(RequestCell.self, forCellReuseIdentifier: NSStringFromClass(RequestCell))
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -31,11 +29,8 @@ class RequestTableViewController: UITableViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        if(requestLog.moreRequests(requestLocations.count)) {
-            (requestNames, requestLocations) = requestLog.getAllRequests()
-            self.tableView.reloadData()
-        }
-        print(requestNames.count)
+        self.tableView.reloadData()
+        print(requestLog.requests.count)
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,22 +47,25 @@ class RequestTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return requestLocations.count
+        return requestLog.requests.count
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("requestCell")
+        var cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(RequestCell)) as? RequestCell
 
         if(cell == nil) {
-            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "requestCell")
+            cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: NSStringFromClass(RequestCell)) as? RequestCell
         }
         let row = indexPath.row
-        let name = requestNames[row]
-        cell!.textLabel!.text = requestNames[indexPath.row]
-        //cell!.detailTextLabel!.text = "\(requestLocations[indexPath.row].latitude)"
+        let req = requestLog.requests[row]
+        cell?.request = req
 
         return cell!
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 60.0
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {

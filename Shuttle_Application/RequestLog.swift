@@ -10,8 +10,18 @@ import Foundation
 import CoreLocation
 import UIKit
 
+class Request {
+    var address: String
+    var location: CLLocationCoordinate2D
+    
+    init(addr: String, loc: CLLocationCoordinate2D) {
+        address = addr
+        location = loc
+    }
+}
+
 class RequestLog {
-    var requests: [String: CLLocationCoordinate2D] = [:]
+    var requests: [Request] = []
     
     func moreRequests(num: Int) -> Bool {
         return requests.count != num
@@ -21,14 +31,14 @@ class RequestLog {
         var names = [String]()
         var locs = [CLLocationCoordinate2D]()
         for request in requests {
-            names.append(request.0)
-            locs.append(request.1)
+            names.append(request.address)
+            locs.append(request.location)
         }
         return (names, locs)
     }
     
-    func addRequest(name: String, location: CLLocationCoordinate2D) {
-        requests[name] = location
+    func addRequest(req: Request) {
+        requests.append(req)
     }
 }
 
