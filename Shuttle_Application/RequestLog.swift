@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import UIKit
 
 class RequestLog {
     var requests: [String: CLLocationCoordinate2D] = [:]
@@ -29,4 +30,8 @@ class RequestLog {
     func addRequest(name: String, location: CLLocationCoordinate2D) {
         requests[name] = location
     }
+}
+
+class RequestTabBarController: UITabBarController {
+    let request = RequestLog()
 }

@@ -14,10 +14,14 @@ class RequestTableViewController: UITableViewController {
     var requestLocations: [CLLocationCoordinate2D] = []
     var requestNames: [String] = []
     
-    var requestLog = RequestLog()
+    private var requestLog = RequestLog()
+    private var tabBarVC = RequestTabBarController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tabBarVC = tabBarController as! RequestTabBarController
+        requestLog = tabBarVC.request
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -53,11 +57,26 @@ class RequestTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("requestCell", forIndexPath: indexPath)
-        cell.detailTextLabel!.text = requestNames[indexPath.row]
-        cell.textLabel!.text = "\(requestLocations[indexPath.row].latitude)"
+        var cell = tableView.dequeueReusableCellWithIdentifier("requestCell")
 
-        return cell
+        if(cell == nil) {
+            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "requestCell")
+        }
+        let row = indexPath.row
+        let name = requestNames[row]
+        cell!.textLabel!.text = requestNames[indexPath.row]
+        //cell!.detailTextLabel!.text = "\(requestLocations[indexPath.row].latitude)"
+
+        return cell!
+    }
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+        super.init(nibName: "RequestTableViewController", bundle: nibBundleOrNil)
+        //return self
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 

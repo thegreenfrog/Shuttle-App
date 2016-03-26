@@ -26,7 +26,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         case Satellite
     }
     
-    var requestLog = RequestLog()
+    private var requestLog = RequestLog()
+    private var tabBarVC = RequestTabBarController()
     var geoCoder = CLGeocoder()
     
     let locationManager = CLLocationManager()
@@ -35,9 +36,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var pinImage:UIImageView?
     var pinLabel:UIButton?
 
+
     @IBOutlet weak var mapSegmentedControl: UISegmentedControl!
     @IBOutlet weak var mapView: MKMapView!
     
+
     @IBOutlet weak var address: UILabel!
     var currentAddress: String?
     
@@ -69,6 +72,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tabBarVC = tabBarController as! RequestTabBarController
+        requestLog = tabBarVC.request
+        
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
@@ -90,18 +96,31 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pinImage = UIImageView(frame: Constants.pinImageFrame)
         pinImage?.center = self.view.center
         pinImage?.image = UIImage(named: "location")
+        pinImage!.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(pinImage!)
+        
+        let imageXConstraint = NSLayoutConstraint(item: pinImage!, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let imageYConstraint = NSLayoutConstraint(item: pinImage!, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
+        self.view.addConstraint(imageXConstraint)
+        self.view.addConstraint(imageYConstraint)
+        
         
         //create label above pin
         pinLabel = UIButton(frame: Constants.pinLabelFrame)
         pinLabel!.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        pinLabel!.center = CGPoint(x: self.view.center.x, y: self.view.center.y-60)
+        
         pinLabel!.setTitle("Set a pickup location", forState: .Normal)
         pinLabel!.setTitleColor(UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0), forState: .Normal)
         pinLabel!.layer.masksToBounds = true
         pinLabel!.layer.cornerRadius = 20
         pinLabel?.addTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
+        pinLabel?.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(pinLabel!)
+        
+        let labelXConstraint = NSLayoutConstraint(item: pinLabel!, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let labelYConstraint = NSLayoutConstraint(item: pinLabel!, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: -40)
+        self.view.addConstraint(labelXConstraint)
+        self.view.addConstraint(labelYConstraint)
         
         let dropPinGesture = UILongPressGestureRecognizer(target: self, action: Selector("dropPin:"))
         mapView.addGestureRecognizer(dropPinGesture)
