@@ -26,6 +26,18 @@
 		D071C3721CB4581500457514 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D071C3701CB4581500457514 /* LoginViewController.xib */; };
 		D071C3751CB4582600457514 /* UserAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071C3731CB4582600457514 /* UserAuthViewController.swift */; };
 		D071C3761CB4582600457514 /* UserAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D071C3741CB4582600457514 /* UserAuthViewController.xib */; };
+		D071C37C1CB46A2F00457514 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C37B1CB46A2F00457514 /* AudioToolbox.framework */; };
+		D071C37E1CB46A3800457514 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C37D1CB46A3800457514 /* CFNetwork.framework */; };
+		D071C3801CB46A4100457514 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C37F1CB46A4100457514 /* CoreGraphics.framework */; };
+		D071C3821CB46A4A00457514 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3811CB46A4A00457514 /* CoreLocation.framework */; };
+		D071C3841CB46A5300457514 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3831CB46A5300457514 /* QuartzCore.framework */; };
+		D071C3861CB46A5A00457514 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3851CB46A5A00457514 /* Security.framework */; };
+		D071C3881CB46A6100457514 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3871CB46A6100457514 /* StoreKit.framework */; };
+		D071C38A1CB46A6A00457514 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3891CB46A6A00457514 /* SystemConfiguration.framework */; };
+		D071C38C1CB46A7200457514 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C38B1CB46A7200457514 /* libz.tbd */; };
+		D071C38E1CB46A7D00457514 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C38D1CB46A7D00457514 /* libsqlite3.tbd */; };
+		D071C3911CB46ADE00457514 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C38F1CB46ADE00457514 /* Bolts.framework */; };
+		D071C3921CB46ADE00457514 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3901CB46ADE00457514 /* Parse.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +83,18 @@
 		D071C3701CB4581500457514 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		D071C3731CB4582600457514 /* UserAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAuthViewController.swift; sourceTree = "<group>"; };
 		D071C3741CB4582600457514 /* UserAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserAuthViewController.xib; sourceTree = "<group>"; };
+		D071C37B1CB46A2F00457514 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		D071C37D1CB46A3800457514 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		D071C37F1CB46A4100457514 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D071C3811CB46A4A00457514 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		D071C3831CB46A5300457514 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D071C3851CB46A5A00457514 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		D071C3871CB46A6100457514 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		D071C3891CB46A6A00457514 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D071C38B1CB46A7200457514 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		D071C38D1CB46A7D00457514 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		D071C38F1CB46ADE00457514 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Frameworks/parse-library-1.12.0/Bolts.framework"; sourceTree = "<group>"; };
+		D071C3901CB46ADE00457514 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Frameworks/parse-library-1.12.0/Parse.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +102,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D071C38E1CB46A7D00457514 /* libsqlite3.tbd in Frameworks */,
+				D071C38C1CB46A7200457514 /* libz.tbd in Frameworks */,
+				D071C38A1CB46A6A00457514 /* SystemConfiguration.framework in Frameworks */,
+				D071C3881CB46A6100457514 /* StoreKit.framework in Frameworks */,
+				D071C3861CB46A5A00457514 /* Security.framework in Frameworks */,
+				D071C3841CB46A5300457514 /* QuartzCore.framework in Frameworks */,
+				D071C3821CB46A4A00457514 /* CoreLocation.framework in Frameworks */,
+				D071C3801CB46A4100457514 /* CoreGraphics.framework in Frameworks */,
+				D071C3911CB46ADE00457514 /* Bolts.framework in Frameworks */,
+				D071C37E1CB46A3800457514 /* CFNetwork.framework in Frameworks */,
+				D071C3921CB46ADE00457514 /* Parse.framework in Frameworks */,
+				D071C37C1CB46A2F00457514 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +137,18 @@
 		8CFEC6761C83B77200C07B76 = {
 			isa = PBXGroup;
 			children = (
+				D071C38D1CB46A7D00457514 /* libsqlite3.tbd */,
+				D071C38B1CB46A7200457514 /* libz.tbd */,
+				D071C38F1CB46ADE00457514 /* Bolts.framework */,
+				D071C3901CB46ADE00457514 /* Parse.framework */,
+				D071C3891CB46A6A00457514 /* SystemConfiguration.framework */,
+				D071C3871CB46A6100457514 /* StoreKit.framework */,
+				D071C3851CB46A5A00457514 /* Security.framework */,
+				D071C3831CB46A5300457514 /* QuartzCore.framework */,
+				D071C3811CB46A4A00457514 /* CoreLocation.framework */,
+				D071C37F1CB46A4100457514 /* CoreGraphics.framework */,
+				D071C37D1CB46A3800457514 /* CFNetwork.framework */,
+				D071C37B1CB46A2F00457514 /* AudioToolbox.framework */,
 				8CFEC6811C83B77200C07B76 /* Shuttle_Application */,
 				8CFEC6961C83B77500C07B76 /* Shuttle_ApplicationTests */,
 				8CFEC6A11C83B77500C07B76 /* Shuttle_ApplicationUITests */,
@@ -446,6 +494,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Shuttle_Application",
+					"$(USER_LIBRARY_DIR)/Frameworks/parse-library-1.12.0",
+				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.bowdoin.Lu.Chris.Shuttle-Application";
@@ -457,6 +510,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Shuttle_Application",
+					"$(USER_LIBRARY_DIR)/Frameworks/parse-library-1.12.0",
+				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.bowdoin.Lu.Chris.Shuttle-Application";

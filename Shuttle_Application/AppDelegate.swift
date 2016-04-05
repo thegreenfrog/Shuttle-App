@@ -8,6 +8,9 @@
 
 import UIKit
 
+import Bolts
+import Parse
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -21,6 +24,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        let configuration = ParseClientConfiguration {
+            $0.applicationId = "00zDxf1qjh6NBMJgkxO5DGaN81fEDksiDrsLB93P"
+            $0.clientKey = "LcamaCTndadV8ms6NbZz17FzfHJT0mRYZ4i1U130"
+        }
+        Parse.initializeWithConfiguration(configuration)
+
+        
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Parse
+import Bolts
 
 class LoginViewController: UIViewController {
 
@@ -47,13 +49,13 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        /*
+        
         let testObject = PFObject(className: "TestObject")
         testObject["foo"] = "bar"
         testObject.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
             print("Object has been saved.")
         }
-        */
+        //newest
         
         // Do any additional setup after loading the view.
     }
