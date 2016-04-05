@@ -27,21 +27,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    /*
-    
-    var destination = segue.destinationViewController
-    
-    if let navCon = destination as? UINavigationController{
-    destination = navCon.visibleViewController!
-    }
-    if let destinationVC = destination as? CalculatorGraphViewController {
-    let z = brain.program as? NSArray
-    destinationVC.programVarFromVC = z
-    destinationVC.vcDescription = brain.description
-    }
-    
-    
-    */
     
     let userAuthController = UserAuthViewController(nibName: "UserAuthViewController", bundle: nil)
     

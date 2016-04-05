@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //NEW STUFF BRANCH
 
 
+    
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         let configuration = ParseClientConfiguration {
@@ -51,8 +53,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
         listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
         
+        referenceToTabBarController = tabBarController
+        
         return true
     }
+    
+    var referenceToTabBarController: UITabBarController?
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
