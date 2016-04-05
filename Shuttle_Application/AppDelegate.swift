@@ -21,12 +21,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
+        
+        
+        
+        let vc = LoginViewController(nibName: "LoginViewController", bundle: nil)
+        let navigationController = UINavigationController(rootViewController: vc)
+        self.window?.rootViewController = navigationController
+        
         let tabBarController = RequestTabBarController()
         let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
         let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
         let controllers = [mapVC, listVC]
         tabBarController.viewControllers = controllers
-        self.window?.rootViewController = tabBarController
         let mapImage = UIImage(named: "Map")
         let listImage = UIImage(named: "List")
         mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
