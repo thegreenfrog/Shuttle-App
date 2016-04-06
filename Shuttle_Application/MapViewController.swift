@@ -65,7 +65,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
         let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
-        requestLog.addRequest(newReq)
+        //requestLog.addRequest(newReq)
     }
     
     // MARK: - Lifecycle
@@ -73,8 +73,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tabBarVC = tabBarController as! RequestTabBarController
-        requestLog = tabBarVC.request
+        //tabBarVC = tabBarController as! RequestTabBarController
+        //requestLog = tabBarVC.request
         
         resetViewLocation = true
         mapView.mapType = .Standard

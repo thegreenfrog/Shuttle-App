@@ -16,49 +16,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    //COMMENT
-    
-    //NEW COMMENT
-    
-    //NEW STUFF BRANCH
-
-
-    
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        let configuration = ParseClientConfiguration {
-            $0.applicationId = "00zDxf1qjh6NBMJgkxO5DGaN81fEDksiDrsLB93P"
-            $0.clientKey = "LcamaCTndadV8ms6NbZz17FzfHJT0mRYZ4i1U130"
-        }
-        Parse.initializeWithConfiguration(configuration)
-
+        Parse.enableLocalDatastore()
+        
+        // Initialize Parse.
+        Parse.setApplicationId("00zDxf1qjh6NBMJgkxO5DGaN81fEDksiDrsLB93P",
+            clientKey: "LcamaCTndadV8ms6NbZz17FzfHJT0mRYZ4i1U130")
+        
+        // [Optional] Track statistics around application opens.
+        PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+
+        let logInVC = RegisterViewController()
+        //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
+        self.window?.rootViewController = logInVC
         
-        
-        
-        
-        let vc = LoginViewController(nibName: "LoginViewController", bundle: nil)
-        let navigationController = UINavigationController(rootViewController: vc)
-        self.window?.rootViewController = navigationController
-        
-        let tabBarController = RequestTabBarController()
-        let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
-        let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
-        let controllers = [mapVC, listVC]
-        tabBarController.viewControllers = controllers
-        let mapImage = UIImage(named: "Map")
-        let listImage = UIImage(named: "List")
-        mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
-        listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
-        
-        referenceToTabBarController = tabBarController
+//        let tabBarController = RequestTabBarController()
+//        let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
+//        let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
+//        let controllers = [mapVC, listVC]
+//        tabBarController.viewControllers = controllers
+//        let mapImage = UIImage(named: "Map")
+//        let listImage = UIImage(named: "List")
+//        mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
+//        listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
         
         return true
     }
-    
-    var referenceToTabBarController: UITabBarController?
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
