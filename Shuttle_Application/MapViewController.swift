@@ -10,6 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 import QuartzCore
+import Parse
 
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -60,13 +61,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print(error)
     }
-    
-    //user wants to get picked up at curent center location in map
-    func pickUpPerson(sender: UIButton!) {
-        let pickUpLoc = self.mapView.centerCoordinate
-        let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
-        //requestLog.addRequest(newReq)
-    }
+
     
     // MARK: - Lifecycle
     
@@ -289,6 +284,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
                 }
             )
         }
+    }
+    
+    //user wants to get picked up at curent center location in map
+    func pickUpPerson(sender: UIButton!) {
+        let pickUpLoc = self.mapView.centerCoordinate
+        let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
+        let pickUpObject = PFObject.init(className: "Request")
+        pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
+        pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
+        //pickUpObject.setObject(pickUpLoc, forKey: "location")
+        pickUpObject.setObject(currentAddress!, forKey: "address")
+        pickUpObject.saveInBackgroundWithBlock({ (success, error) in
+            print("object saved")
+        })
+        //requestLog.addRequest(newReq)
     }
     
 

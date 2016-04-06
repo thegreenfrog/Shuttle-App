@@ -41,6 +41,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //create all textfields, buttons, and their constraints
         firstNameText = UITextField(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width-10, height: 100)))
         firstNameText.borderStyle = .Line
         firstNameText.tag = 0
@@ -139,6 +140,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         self.view.addConstraint(signUpLeftConstraint)
         signUpButton.addTarget(self, action: "signUpAction", forControlEvents: .TouchUpInside)
         
+        //dismisses keyboard when user taps outside of keyboard
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
     }
@@ -200,6 +202,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    //function called when user taps "Sign Up"
     func signUpAction() {
         //make sure inputs are filled in properly
         checkForErrors()

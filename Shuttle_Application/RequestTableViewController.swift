@@ -8,17 +8,19 @@
 
 import UIKit
 import CoreLocation
+import Parse
 
 class RequestTableViewController: UITableViewController {
     
-    private var requestLog = RequestLog()
-    private var tabBarVC = RequestTabBarController()
+//    private var requestLog = RequestLog()
+//    private var tabBarVC = RequestTabBarController()
+    var requests = [PFObject]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tabBarVC = tabBarController as! RequestTabBarController
-        requestLog = tabBarVC.request
+//        tabBarVC = tabBarController as! RequestTabBarController
+//        requestLog = tabBarVC.request
         self.tableView.registerClass(RequestCell.self, forCellReuseIdentifier: NSStringFromClass(RequestCell))
 
         // Uncomment the following line to preserve selection between presentations
@@ -29,8 +31,19 @@ class RequestTableViewController: UITableViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
-        self.tableView.reloadData()
-        print(requestLog.requests.count)
+        let query = PFQuery(className: "Request")
+        query.findObjectsInBackgroundWithBlock({ (objects, error) in
+            if error != nil {
+                print("Error retrieving requests")
+                
+            }
+            for request in objects! {
+                self.requests.append(request)
+                
+            }
+            self.tableView.reloadData()
+        })
+        //print(requestLog.requests.count)
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,7 +60,7 @@ class RequestTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return requestLog.requests.count
+        return requests.count
     }
 
     
@@ -58,8 +71,9 @@ class RequestTableViewController: UITableViewController {
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: NSStringFromClass(RequestCell)) as? RequestCell
         }
         let row = indexPath.row
-        let req = requestLog.requests[row]
-        cell?.request = req
+        let req = requests[row]
+        cell?.addressLabel.text = req.objectForKey("address") as? String
+        cell?.locationLabel.text = "\(req.objectForKey("latitude")), \(req.objectForKey("longitude"))"
 
         return cell!
     }
