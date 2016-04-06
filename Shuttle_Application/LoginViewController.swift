@@ -16,6 +16,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         static let NoEmail = "Please enter your username"
         static let NoPassword = "Please enter your password"
         
+        static let ErrorBorderWidth:CGFloat = 1.0
+        static let ErrorMessageProportionHeight:CGFloat = 20.0
+        static let ErrorMessageWidth:CGFloat = 200.0
+        
         static let textFieldFrame:CGRect = CGRect(origin: CGPointZero, size: CGSize(width: 0, height: 0))
     }
     
@@ -25,6 +29,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var passwordTextField: UITextField!
     
     let placeholders = ["Username (email)", "Password"]//placeholders for textfields
+    
+    var errorMessages = [String]()
     
     override func viewDidLoad() {
         
@@ -94,19 +100,81 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
     }
     
+    func checkForErrors() {
+        if emailTextField.textColor == UIColor.lightGrayColor() {
+            errorMessages.append(Constants.NoEmail)
+            emailTextField.layer.borderColor = UIColor.redColor().CGColor
+            emailTextField.layer.borderWidth = Constants.ErrorBorderWidth
+        } else if passwordTextField.textColor == UIColor.lightGrayColor() {
+            errorMessages.append(Constants.NoPassword)
+            passwordTextField.layer.borderColor = UIColor.redColor().CGColor
+            passwordTextField.layer.borderWidth = Constants.ErrorBorderWidth
+        }
+    }
+    
+    func handleErrors() {
+        emailTextField.layer.borderWidth = 0.0
+        passwordTextField.layer.borderWidth = 0.0
+        let frame = CGRect(origin: CGPointZero, size: CGSize(width: Constants.ErrorMessageWidth, height: Constants.ErrorMessageProportionHeight * CGFloat(errorMessages.count)))
+        let errorSubView = UIView(frame: frame)
+        errorSubView.center.x = signInButton.center.x
+        errorSubView.center.y = signInButton.center.y + Constants.ErrorMessageProportionHeight * CGFloat(errorMessages.count)
+        errorSubView.layer.borderColor = UIColor.redColor().CGColor
+        errorSubView.layer.borderWidth = Constants.ErrorBorderWidth
+        var count = 0
+        for error in errorMessages {
+            let labelOrigin = CGPoint(x: errorSubView.layer.bounds.origin.x, y: errorSubView.layer.bounds.origin.y + Constants.ErrorMessageProportionHeight * CGFloat(count))
+            let errorFrame = CGRect(origin: labelOrigin, size: CGSize(width: Constants.ErrorMessageWidth, height: Constants.ErrorMessageProportionHeight))
+            let label = UILabel(frame: errorFrame)
+            label.text = error
+            label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            label.font = UIFont(name: label.font.fontName, size: 10)
+            errorSubView.addSubview(label)
+            count++
+        }
+        self.view.addSubview(errorSubView)
+    }
+    
     //action called when user taps "Sign In"
     func signInAction() {
-        let tabBarVC = UITabBarController()
-        let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
-        let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
-        let controllers = [mapVC, listVC]
-        tabBarVC.viewControllers = controllers
-        let mapImage = UIImage(named: "Map")
-        let listImage = UIImage(named: "List")
-        mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
-        listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
+        checkForErrors()//check for improper inputs
+        
+        if(errorMessages.count > 0) {//show error messages if improper inputs exist
+            handleErrors()
+        } else {//attempt to log in
+            PFUser.logInWithUsernameInBackground(emailTextField.text!, password: passwordTextField.text!) {
+                (user: PFUser?, error: NSError?) -> Void in
+                if user != nil {
+                    //save user info
+                    let keyChainWrapper = KeychainWrapper()
+                    keyChainWrapper.mySetObject(self.passwordTextField.text, forKey: kSecValueData)
+                    keyChainWrapper.writeToKeychain()
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLoginKey")
+                    NSUserDefaults.standardUserDefaults().setValue(self.emailTextField.text, forKey: "username")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    
+                    //seque to main application
+                    let tabBarVC = UITabBarController()
+                    let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
+                    let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
+                    let controllers = [mapVC, listVC]
+                    tabBarVC.viewControllers = controllers
+                    let mapImage = UIImage(named: "Map")
+                    let listImage = UIImage(named: "List")
+                    mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
+                    listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
+                    
+                    self.presentViewController(tabBarVC, animated: true, completion: nil)
+                } else {
+                    // The login failed
+                    if let error = error {
+                        self.errorMessages.append(error.localizedDescription)
+                        self.handleErrors()
+                    }
+                }
+            }
+        }
 
-        presentViewController(tabBarVC, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

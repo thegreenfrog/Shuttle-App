@@ -226,6 +226,14 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     }
                     self.handleErrors()
                 } else {
+                    //save user info
+                    let keyChainWrapper = KeychainWrapper()
+                    keyChainWrapper.mySetObject(self.passText.text, forKey: kSecValueData)
+                    keyChainWrapper.writeToKeychain()
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLoginKey")
+                    NSUserDefaults.standardUserDefaults().setValue(self.emailText.text, forKey: "username")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    
                     //set up application
                     let tabBarVC = UITabBarController()
                     let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)

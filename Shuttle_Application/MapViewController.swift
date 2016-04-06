@@ -289,7 +289,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
-        let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
+        //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
         let pickUpObject = PFObject.init(className: "Request")
         pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
         pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
@@ -297,6 +297,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pickUpObject.setObject(currentAddress!, forKey: "address")
         pickUpObject.saveInBackgroundWithBlock({ (success, error) in
             print("object saved")
+        })
+        pinImage?.fadeOut(1.0, delay: 0, completion: {(finished: Bool) -> Void in
+            self.pinImage?.removeFromSuperview()
+            let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+            loadingIndicator.userInteractionEnabled = false
+            loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+            loadingIndicator.startAnimating()
+            self.view.addSubview(loadingIndicator)
+            let loadingXConstraint = NSLayoutConstraint(item: loadingIndicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
+            let loadingYConstraint = NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
+            self.view.addConstraint(loadingXConstraint)
+            self.view.addConstraint(loadingYConstraint)
+        })
+        pinLabel?.fadeOut(1.0, delay: 0.0, completion: { (finished: Bool) -> Void in
+            self.pinLabel?.setTitle("Finding Driver", forState: .Disabled)
+            self.pinLabel?.enabled = false
+            self.pinLabel?.fadeIn(1.0, delay: 0, completion: {_ in })
         })
         //requestLog.addRequest(newReq)
     }
