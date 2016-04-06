@@ -299,7 +299,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             print("object saved")
         })
         pinImage?.fadeOut(1.0, delay: 0, completion: {(finished: Bool) -> Void in
+            //remove pin image from view and also remove all of its constraints
+            self.pinImage?.removeConstraints()
             self.pinImage?.removeFromSuperview()
+            //show loading indicator in place of pin image
             let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
             loadingIndicator.userInteractionEnabled = false
             loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -315,7 +318,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.pinLabel?.enabled = false
             self.pinLabel?.fadeIn(1.0, delay: 0, completion: {_ in })
         })
-        //requestLog.addRequest(newReq)
     }
     
 

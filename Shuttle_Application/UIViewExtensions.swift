@@ -20,4 +20,18 @@ extension UIView {
             self.alpha = 0.0
             }, completion: completion)
     }
+    
+    func removeConstraints() {
+        if let supView = self.superview {
+            for con in supView.constraints {
+                if con.firstItem as? UIView == self || con.secondItem as? UIView == self {
+                    print("removed constraint")
+                    supView.removeConstraint(con)
+                }
+            }
+        }
+        for con in self.constraints {
+            self.removeConstraint(con)
+        }
+    }
 }
