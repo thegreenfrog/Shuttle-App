@@ -182,18 +182,6 @@ class UserLoginViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        
-        super.init(nibName: "LoginViewController", bundle: nibBundleOrNil)
-        //return self
-    }
-    
-    
-    
-    required init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder)
-        
-    }
-    
     // MARK: - TextField Delegate Methods
     
     func textFieldDidBeginEditing(textField: UITextField) {
