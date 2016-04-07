@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RegisterViewController: UIViewController {
+class UserRegisterViewController: UIViewController {
     struct Constants {
         static let buttonFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 45))
         static let labelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 225, height: 100))
@@ -52,13 +52,13 @@ class RegisterViewController: UIViewController {
     }
     
     func showSignIn() {
-        let signInVC = LoginViewController()
+        let signInVC = UserLoginViewController()
         signInVC.modalTransitionStyle = .CoverVertical
         presentViewController(signInVC, animated: true, completion: nil)
     }
     
     func showSignUp() {
-        let signUpVC = SignUpViewController()
+        let signUpVC = UserSignUpViewController()
         signUpVC.modalTransitionStyle = .CoverVertical
         presentViewController(signUpVC, animated: true, completion: nil)
     }

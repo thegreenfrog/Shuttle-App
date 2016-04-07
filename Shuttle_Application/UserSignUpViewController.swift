@@ -9,7 +9,7 @@
 import UIKit
 import Parse
 
-class SignUpViewController: UIViewController, UITextFieldDelegate {
+class UserSignUpViewController: UIViewController, UITextFieldDelegate {
     struct Constants {
         static let FirstNamePlaceHolder = "Please enter your first name"
         static let LastNamePlaceHolder = "Please enter your last name"

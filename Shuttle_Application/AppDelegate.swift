@@ -44,9 +44,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = tabBarVC
             
         } else {//show login page
-            let logInVC = RegisterViewController()
+            let welcomeVC = WelcomeViewController()
             //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
-            self.window?.rootViewController = logInVC
+            self.window?.rootViewController = welcomeVC
         }
         
         return true

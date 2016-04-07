@@ -10,7 +10,7 @@ import UIKit
 import Parse
 import Bolts
 
-class LoginViewController: UIViewController, UITextFieldDelegate {
+class UserLoginViewController: UIViewController, UITextFieldDelegate {
     
     struct Constants {
         static let NoEmail = "Please enter your username"
