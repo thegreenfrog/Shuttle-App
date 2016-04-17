@@ -68,6 +68,8 @@ class WelcomeViewController: UIViewController {
     }
     
     func segueToDriverSignin() {
+        let driverVC = DriverRegisterViewController()
+        presentViewController(driverVC, animated: true, completion: nil)
         
     }
     
