@@ -312,6 +312,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             let loadingYConstraint = NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
             self.view.addConstraint(loadingXConstraint)
             self.view.addConstraint(loadingYConstraint)
+            
+            //send notification to nearest driver within 10 miles
         })
         pinLabel?.fadeOut(1.0, delay: 0.0, completion: { (finished: Bool) -> Void in
             self.pinLabel?.setTitle("Finding Driver", forState: .Disabled)

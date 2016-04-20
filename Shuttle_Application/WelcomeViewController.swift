@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class WelcomeViewController: UIViewController {
 
@@ -14,50 +15,106 @@ class WelcomeViewController: UIViewController {
         static let buttonFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 45))
         static let labelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 225, height: 100))
     }
-    var driverButton: UIButton!
-    var userButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.clearColor()
         
-        let welcomeLabel = UILabel(frame: Constants.buttonFrame)
-        welcomeLabel.backgroundColor = UIColor(red: 244/255, green: 164/255, blue: 96/255, alpha: 1.0)
+        let welcomeLabel = UILabel(frame: Constants.labelFrame)
+        welcomeLabel.textColor = UIColor.whiteColor()
         welcomeLabel.numberOfLines = 0
-        welcomeLabel.text = "Welcome! Register as:"
+        welcomeLabel.text = "Welcome!"
         welcomeLabel.textAlignment = .Center
         welcomeLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(welcomeLabel)
-        let welcomeXConstraint = NSLayoutConstraint(item: welcomeLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let welcomeYConstraint = NSLayoutConstraint(item: welcomeLabel, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: -60)
-        self.view.addConstraint(welcomeXConstraint)
-        self.view.addConstraint(welcomeYConstraint)
         
+        let driverlabel = UILabel(frame: Constants.buttonFrame)
+        driverlabel.font = UIFont.systemFontOfSize(14)
+        driverlabel.text = "Driver?\nSwipe Left!"
+        driverlabel.textColor = UIColor.whiteColor()
+        driverlabel.numberOfLines = 0
+        driverlabel.lineBreakMode = .ByWordWrapping
+        driverlabel.textAlignment = .Left
+        driverlabel.translatesAutoresizingMaskIntoConstraints = false
+        let rightArrowPath = UIBezierPath()
+        var start = CGPointZero
+        rightArrowPath.moveToPoint(start)
+        var next = CGPoint(x: start.x+25, y: start.y-20)
+        rightArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+10)
+        rightArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x+50, y: next.y)
+        rightArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+20)
+        rightArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x-50, y: next.y)
+        rightArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+10)
+        rightArrowPath.addLineToPoint(next)
+        rightArrowPath.addLineToPoint(start)
+        rightArrowPath.closePath()
+        let rightArrowShape = UIImage.shapeImageWithBezierPath(rightArrowPath, fillColor: UIColor.clearColor(), strokeColor: UIColor.whiteColor(), strokeWidth: 1.0)
+        let rightImageView = UIImageView(image: rightArrowShape)
+        let driverlabelStackView = UIStackView()
+        driverlabelStackView.addArrangedSubview(driverlabel)
+        driverlabelStackView.addArrangedSubview(rightImageView)
+        driverlabelStackView.axis = .Vertical
+        driverlabelStackView.spacing = 10
+        driverlabelStackView.distribution = .EqualSpacing
+        driverlabelStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        driverButton = UIButton(frame: Constants.buttonFrame)
-        driverButton.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        driverButton.setTitle("Driver", forState: .Normal)
-        driverButton.layer.masksToBounds = true
-        driverButton.layer.cornerRadius = 15
-        driverButton.addTarget(self, action: "segueToDriverSignin", forControlEvents: .TouchUpInside)
-        driverButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(driverButton)
-        let driverXConstraint = NSLayoutConstraint(item: driverButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let driverYConstraint = NSLayoutConstraint(item: driverButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 40)
-        self.view.addConstraint(driverXConstraint)
-        self.view.addConstraint(driverYConstraint)
+        let consumerLabel = UILabel(frame: Constants.buttonFrame)
+        consumerLabel.font = UIFont.systemFontOfSize(14)
+        consumerLabel.text = "User?\nSwipe Right!"
+        consumerLabel.textColor = UIColor.whiteColor()
+        consumerLabel.numberOfLines = 0
+        consumerLabel.lineBreakMode = .ByWordWrapping
+        consumerLabel.textAlignment = .Right
+        consumerLabel.translatesAutoresizingMaskIntoConstraints = false
+        let leftArrowPath = UIBezierPath()
+        start = CGPointZero
+        leftArrowPath.moveToPoint(start)
+        next = CGPoint(x: start.x-25, y: start.y-20)
+        leftArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+10)
+        leftArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x-50, y: next.y)
+        leftArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+20)
+        leftArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x+50, y: next.y)
+        leftArrowPath.addLineToPoint(next)
+        next = CGPoint(x: next.x, y: next.y+10)
+        leftArrowPath.addLineToPoint(next)
+        leftArrowPath.addLineToPoint(start)
+        leftArrowPath.closePath()
+        let leftArrowShape = UIImage.shapeImageWithBezierPath(leftArrowPath, fillColor: UIColor.clearColor(), strokeColor: UIColor.whiteColor(), strokeWidth: 1.0)
+        let leftImageView = UIImageView(image: leftArrowShape)
+        let consumerLabelStackView = UIStackView()
+        consumerLabelStackView.addArrangedSubview(consumerLabel)
+        consumerLabelStackView.addArrangedSubview(leftImageView)
+        consumerLabelStackView.axis = .Vertical
+        consumerLabelStackView.spacing = 10
+        consumerLabelStackView.distribution = .EqualSpacing
+        consumerLabelStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        userButton = UIButton(frame: Constants.buttonFrame)
-        userButton.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        userButton.setTitle("User", forState: .Normal)
-        userButton.layer.masksToBounds = true
-        userButton.layer.cornerRadius = 15
-        userButton.addTarget(self, action: "segueToUserSignin", forControlEvents: .TouchUpInside)
-        userButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(userButton)
-        let userXConstraint = NSLayoutConstraint(item: userButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let userYConstraint = NSLayoutConstraint(item: userButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 100)
-        self.view.addConstraint(userXConstraint)
-        self.view.addConstraint(userYConstraint)
+        let labelStackView = UIStackView()
+        labelStackView.addArrangedSubview(driverlabelStackView)
+        labelStackView.addArrangedSubview(consumerLabelStackView)
+        labelStackView.axis = .Horizontal
+        labelStackView.distribution = .EqualSpacing
+        labelStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let screenStackView = UIStackView()
+        screenStackView.addArrangedSubview(welcomeLabel)
+        screenStackView.addArrangedSubview(labelStackView)
+        screenStackView.axis = .Vertical
+        screenStackView.distribution = .Fill
+        screenStackView.spacing = 50
+        screenStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(screenStackView)
+        screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor).active = true
+        screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, constant: -20).active = true
         
         
     }
@@ -65,17 +122,6 @@ class WelcomeViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    func segueToDriverSignin() {
-        let driverVC = DriverRegisterViewController()
-        presentViewController(driverVC, animated: true, completion: nil)
-        
-    }
-    
-    func segueToUserSignin() {
-        let userVC = UserRegisterViewController()
-        presentViewController(userVC, animated: true, completion: nil)
     }
 
 

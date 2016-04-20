@@ -19,18 +19,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        Parse.enableLocalDatastore()
-        
         // Initialize Parse.
+        Parse.enableLocalDatastore()
         Parse.setApplicationId("00zDxf1qjh6NBMJgkxO5DGaN81fEDksiDrsLB93P",
             clientKey: "LcamaCTndadV8ms6NbZz17FzfHJT0mRYZ4i1U130")
-        
         // [Optional] Track statistics around application opens.
         PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
         
+        //Enable Push Notifications
+        let userNotificationTypes: UIUserNotificationType = [.Alert, .Badge, .Sound]
+        let settings = UIUserNotificationSettings(forTypes: userNotificationTypes, categories: nil)
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+        
+
+        
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-                    let welcomeVC = WelcomeViewController()
+                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
                     //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
                     self.window?.rootViewController = welcomeVC
 //        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {//immediately segue to map if user is signed in already
@@ -52,6 +58,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
         
         return true
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let installation = PFInstallation.currentInstallation()
+        installation.setDeviceTokenFromData(deviceToken)
+        installation.saveInBackground()
+        
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        PFPush.handlePush(userInfo)
     }
 
     func applicationWillResignActive(application: UIApplication) {
