@@ -222,7 +222,9 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
                     self.modalListener?.returnFromModal(true)
-                    self.modalListener?.goToApp()
+                    self.dismissViewControllerAnimated(true, completion: {
+                        self.modalListener?.goToApp()
+                    })
                 }
             })
         }

@@ -37,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
                     let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
-                    //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
                     self.window?.rootViewController = welcomeVC
 //        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {//immediately segue to map if user is signed in already
 //            let tabBarVC = UITabBarController()

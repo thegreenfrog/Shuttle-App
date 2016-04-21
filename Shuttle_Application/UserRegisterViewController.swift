@@ -52,6 +52,7 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
         screenStackView.addArrangedSubview(signUpButton)
         screenStackView.axis = .Vertical
         screenStackView.alignment = .Fill
+        screenStackView.spacing = 10
         screenStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(screenStackView)
         screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
@@ -105,17 +106,14 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
     
     func goToApp() {
         //seque to main application
-        let tabBarVC = UITabBarController()
-        let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
-        let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
-        let controllers = [mapVC, listVC]
-        tabBarVC.viewControllers = controllers
-        let mapImage = UIImage(named: "Map")
-        let listImage = UIImage(named: "List")
-        mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
-        listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
+        let mapVC = MapViewController()
+        mapVC.title = "Uber Bowdoin"
+        let navVC = UINavigationController()
+        navVC.viewControllers = [mapVC]
+        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+        navVC.navigationBar.tintColor = UIColor.whiteColor()
         
-        self.presentViewController(tabBarVC, animated: true, completion: nil)
+        self.presentViewController(navVC, animated: true, completion: nil)
     }
 
     /*

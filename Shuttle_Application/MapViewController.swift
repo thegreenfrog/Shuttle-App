@@ -37,12 +37,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var pinImage:UIImageView?
     var pinLabel:UIButton?
 
+    var mapSegmentedControl: UISegmentedControl!
+    var mapView: MKMapView!
 
-    @IBOutlet weak var mapSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var mapView: MKMapView!
-    
-
-    @IBOutlet weak var address: UILabel!
+    var address: UILabel!
     var currentAddress: String?
     
     
@@ -62,18 +60,47 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         print(error)
     }
 
+    func drawScreen() {
+        address = UILabel()
+        address.numberOfLines = 0
+        
+        address.backgroundColor = UIColor.lightGrayColor()
+        address.textColor = UIColor.blackColor()
+        address.textAlignment = .Center
+        address.translatesAutoresizingMaskIntoConstraints = false
+        
+        mapView = MKMapView()
+        mapView.mapType = .Standard
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        
+        let screenStackView = UIStackView()
+        screenStackView.addArrangedSubview(address)
+        screenStackView.addArrangedSubview(mapView)
+        screenStackView.axis = .Vertical
+        screenStackView.alignment = .Fill
+        screenStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(screenStackView)
+        let viewHeight = self.view.frame.height - (self.navigationController?.navigationBar.frame.height)!
+        mapView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
+        mapView.heightAnchor.constraintEqualToConstant(viewHeight * 7 / 8).active = true
+        address.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
+        address.heightAnchor.constraintEqualToConstant(viewHeight * 1 / 8).active = true
+        screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
+        screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
+        
+    }
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //tabBarVC = tabBarController as! RequestTabBarController
-        //requestLog = tabBarVC.request
-        
+        drawScreen()
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
+        
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()
@@ -94,11 +121,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pinImage?.image = UIImage(named: "location")
         pinImage!.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(pinImage!)
-        
-        let imageXConstraint = NSLayoutConstraint(item: pinImage!, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let imageYConstraint = NSLayoutConstraint(item: pinImage!, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
-        self.view.addConstraint(imageXConstraint)
-        self.view.addConstraint(imageYConstraint)
+        pinImage?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        pinImage?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (navigationController?.navigationBar.frame.height)!).active = true
         
         
         //create label above pin
@@ -112,15 +136,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pinLabel?.addTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
         pinLabel?.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(pinLabel!)
-        
-        let labelXConstraint = NSLayoutConstraint(item: pinLabel!, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let labelYConstraint = NSLayoutConstraint(item: pinLabel!, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: -40)
-        self.view.addConstraint(labelXConstraint)
-        self.view.addConstraint(labelYConstraint)
+        pinLabel?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        pinLabel?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (navigationController?.navigationBar.frame.height)!-40).active = true
         
         let dropPinGesture = UILongPressGestureRecognizer(target: self, action: Selector("dropPin:"))
         mapView.addGestureRecognizer(dropPinGesture)
-        mapSegmentedControl.selectedSegmentIndex = 2
+        
         addRoute()
         dropStopLocationPins()
     }
@@ -136,7 +157,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     // MARK: - Map Functions
 
-    @IBAction func changeMapType(sender: UISegmentedControl) {
+    func changeMapType(sender: UISegmentedControl) {
         let mapType = MapType(rawValue: mapSegmentedControl.selectedSegmentIndex)
         switch (mapType!) {
         case .Standard:
@@ -322,7 +343,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         })
     }
     
-
     /*
     // MARK: - Navigation
 

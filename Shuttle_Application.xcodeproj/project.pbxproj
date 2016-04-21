@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		8C0042E31C91C16A007D4FEC /* RequestLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0042E21C91C16A007D4FEC /* RequestLog.swift */; };
 		8C0042E51C9288E2007D4FEC /* RequestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */; };
-		8C0042E91C9997DF007D4FEC /* MapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042E81C9997DF007D4FEC /* MapViewController.xib */; };
+		8C0042E91C9997DF007D4FEC /* NOTMapViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042E81C9997DF007D4FEC /* NOTMapViewController.xib */; };
 		8C0042EB1CA49696007D4FEC /* RequestTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */; };
 		8C08BA6B1CA6B311001DC98F /* RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C08BA6A1CA6B311001DC98F /* RequestCell.swift */; };
 		8C0A168E1CB4B00600C09BA9 /* UserRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A168D1CB4B00600C09BA9 /* UserRegisterViewController.swift */; };
@@ -73,7 +73,7 @@
 /* Begin PBXFileReference section */
 		8C0042E21C91C16A007D4FEC /* RequestLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestLog.swift; sourceTree = "<group>"; };
 		8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTableViewController.swift; sourceTree = "<group>"; };
-		8C0042E81C9997DF007D4FEC /* MapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MapViewController.xib; sourceTree = "<group>"; };
+		8C0042E81C9997DF007D4FEC /* NOTMapViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NOTMapViewController.xib; sourceTree = "<group>"; };
 		8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestTableViewController.xib; sourceTree = "<group>"; };
 		8C08BA6A1CA6B311001DC98F /* RequestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestCell.swift; sourceTree = "<group>"; };
 		8C0A168D1CB4B00600C09BA9 /* UserRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRegisterViewController.swift; sourceTree = "<group>"; };
@@ -215,7 +215,7 @@
 				8CFEC68B1C83B77400C07B76 /* LaunchScreen.storyboard */,
 				8CFEC6861C83B77400C07B76 /* Main.storyboard */,
 				8CFEC6B01C83B9ED00C07B76 /* MapViewController.swift */,
-				8C0042E81C9997DF007D4FEC /* MapViewController.xib */,
+				8C0042E81C9997DF007D4FEC /* NOTMapViewController.xib */,
 				8C08BA6A1CA6B311001DC98F /* RequestCell.swift */,
 				8C0042E21C91C16A007D4FEC /* RequestLog.swift */,
 				8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */,
@@ -369,7 +369,7 @@
 				8CFEC6B71C84A10100C07B76 /* RoutePath.plist in Resources */,
 				8CFEC68D1C83B77400C07B76 /* LaunchScreen.storyboard in Resources */,
 				8C633FAF1CC73B0100431D24 /* car-door-ipad.jpg in Resources */,
-				8C0042E91C9997DF007D4FEC /* MapViewController.xib in Resources */,
+				8C0042E91C9997DF007D4FEC /* NOTMapViewController.xib in Resources */,
 				8CFEC68A1C83B77400C07B76 /* Assets.xcassets in Resources */,
 				8C0042EB1CA49696007D4FEC /* RequestTableViewController.xib in Resources */,
 				D05CD2271CC4290400A3FAC4 /* DriverLoginViewController.xib in Resources */,
