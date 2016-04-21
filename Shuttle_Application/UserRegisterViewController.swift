@@ -104,6 +104,8 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
         
     }
     
+
+    
     func goToApp() {
         //seque to main application
         let mapVC = MapViewController()
@@ -112,8 +114,10 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
         navVC.viewControllers = [mapVC]
         navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
         navVC.navigationBar.tintColor = UIColor.whiteColor()
+
+            self.presentViewController(navVC, animated: true, completion: nil)
         
-        self.presentViewController(navVC, animated: true, completion: nil)
+        
     }
 
     /*

@@ -37,7 +37,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var pinImage:UIImageView?
     var pinLabel:UIButton?
 
-    var mapSegmentedControl: UISegmentedControl!
     var mapView: MKMapView!
 
     var address: UILabel!
@@ -110,11 +109,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
             locationManager.requestLocation()
             //mapView.showsUserLocation = true
         }
-        
+    
         //create and render pinImageIcon
         pinImage = UIImageView(frame: Constants.pinImageFrame)
         pinImage?.center = self.view.center
@@ -156,18 +155,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // MARK: - Map Functions
-
-    func changeMapType(sender: UISegmentedControl) {
-        let mapType = MapType(rawValue: mapSegmentedControl.selectedSegmentIndex)
-        switch (mapType!) {
-        case .Standard:
-            mapView.mapType = MKMapType.Standard
-        case .Hybrid:
-            mapView.mapType = MKMapType.Hybrid
-        case .Satellite:
-            mapView.mapType = MKMapType.Satellite
-        }
-    }
     
     func addRoute() {
         let thePath = NSBundle.mainBundle().pathForResource("RoutePath", ofType: "plist")
@@ -307,18 +294,34 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
+    //helper function that pings nearest drivers until one accepts
+    func findDriver(loc: CLLocationCoordinate2D) {
+        print(loc.latitude, loc.longitude)
+        //find drivers
+        let driverQuery = PFInstallation.query()
+        driverQuery?.whereKey("channels", equalTo:"drivers")
+        let geoPoint = PFGeoPoint(latitude: loc.latitude, longitude: loc.longitude)
+        driverQuery?.whereKey("location", nearGeoPoint: geoPoint)
+
+        let push = PFPush()
+        push.setQuery(driverQuery)
+        push.setMessage("Looking for Drivers!")
+        push.sendPushInBackground()
+        
+    }
+    
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
-        //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
-        let pickUpObject = PFObject.init(className: "Request")
-        pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
-        pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
-        //pickUpObject.setObject(pickUpLoc, forKey: "location")
-        pickUpObject.setObject(currentAddress!, forKey: "address")
-        pickUpObject.saveInBackgroundWithBlock({ (success, error) in
-            print("object saved")
-        })
+//        //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
+//        let pickUpObject = PFObject.init(className: "Request")
+//        pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
+//        pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
+//        //pickUpObject.setObject(pickUpLoc, forKey: "location")
+//        pickUpObject.setObject(currentAddress!, forKey: "address")
+//        pickUpObject.saveInBackgroundWithBlock({ (success, error) in
+//            print("object saved")
+//        })
         pinImage?.fadeOut(1.0, delay: 0, completion: {(finished: Bool) -> Void in
             //remove pin image from view and also remove all of its constraints
             self.pinImage?.removeConstraints()
@@ -329,12 +332,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
             loadingIndicator.startAnimating()
             self.view.addSubview(loadingIndicator)
-            let loadingXConstraint = NSLayoutConstraint(item: loadingIndicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-            let loadingYConstraint = NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
-            self.view.addConstraint(loadingXConstraint)
-            self.view.addConstraint(loadingYConstraint)
+            loadingIndicator.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+            loadingIndicator.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
             
             //send notification to nearest driver within 10 miles
+            self.findDriver(pickUpLoc)
         })
         pinLabel?.fadeOut(1.0, delay: 0.0, completion: { (finished: Bool) -> Void in
             self.pinLabel?.setTitle("Finding Driver", forState: .Disabled)
