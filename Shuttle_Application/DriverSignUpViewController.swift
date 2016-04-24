@@ -8,7 +8,6 @@
 
 import UIKit
 import Parse
-import Bolts
 
 class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
     struct Constants {
@@ -35,6 +34,9 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
     var emailText: UITextField!
     var passText: UITextField!
     var retypePassText: UITextField!
+    var exitButton: UIButton!
+    
+    var modalListener: ModalDriverTransitionListener?//instance of protocol to make callbacks to registerVC
     
     var signUpButton: UIButton!
     
@@ -44,6 +46,13 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        exitButton = UIButton(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width, height: 75)))
+        exitButton.setTitle("X", forState: .Normal)
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        exitButton.titleLabel!.font = UIFont.systemFontOfSize(24)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.addTarget(self, action: "exitPage", forControlEvents: .TouchUpInside)
+
         //create all textfields, buttons, and their constraints
         firstNameText = UITextField(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width-10, height: 100)))
         firstNameText.borderStyle = .Line
@@ -237,6 +246,12 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
                     NSUserDefaults.standardUserDefaults().setValue(self.emailText.text, forKey: "username")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
+                    self.modalListener?.returnFromModal(true)
+                    self.dismissViewControllerAnimated(true, completion: {
+                        self.modalListener?.goToApp()
+                    })
+                    
+                    /*
                     //set up application
                     let tabBarVC = UITabBarController()
                     let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
@@ -249,6 +264,7 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
                     listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
                     
                     self.presentViewController(tabBarVC, animated: true, completion: nil)
+                    */
                 }
             })
         }
@@ -287,6 +303,11 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+    
+    func exitPage() {
+        modalListener?.returnFromModal(false)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     

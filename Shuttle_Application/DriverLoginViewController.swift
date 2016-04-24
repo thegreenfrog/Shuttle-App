@@ -26,8 +26,12 @@ class DriverLoginViewController: UIViewController, UITextFieldDelegate {
     
     //buttons and textfield variables
     var signInButton: UIButton!
+    var exitButton: UIButton!
+    
     var emailTextField: UITextField!
     var passwordTextField: UITextField!
+    
+    var modalListener: ModalDriverTransitionListener?//instance for protocol to handle returning to registerVC
     
     let placeholders = ["Username (email)", "Password"]//placeholders for textfields
     
@@ -36,59 +40,75 @@ class DriverLoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-
-        //create the loginbutton, email and password input textfields, and their constraints programtically
-        emailTextField = UITextField(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width-10, height: 100)))
-        emailTextField.borderStyle = .Line
-        emailTextField.tag = 0
-        emailTextField.font = UIFont.systemFontOfSize(30)
-        emailTextField.returnKeyType = UIReturnKeyType.Done
-        emailTextField.text = placeholders[emailTextField.tag]
-        emailTextField.textColor = UIColor.lightGrayColor()
-        emailTextField.delegate = self
-        emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(emailTextField)
-        let emailCenterXConstraint = NSLayoutConstraint(item: emailTextField, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let emailLeftConstraint = NSLayoutConstraint(item: emailTextField, attribute: .Leading, relatedBy: .Equal, toItem: self.view, attribute: .Leading, multiplier: 1, constant: 10)
-        let emailCenterYContraint = NSLayoutConstraint(item: emailTextField, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: -100)
-        self.view.addConstraint(emailCenterYContraint)
-        self.view.addConstraint(emailCenterXConstraint)
-        self.view.addConstraint(emailLeftConstraint)
-        
-        passwordTextField = UITextField(frame: CGRectMake(0, 0, self.view.frame.width-10, 75))
-        passwordTextField.borderStyle = .Line
-        passwordTextField.tag = 1
-        passwordTextField.font = UIFont.systemFontOfSize(30)
-        passwordTextField.returnKeyType = UIReturnKeyType.Done
-        passwordTextField.text = placeholders[passwordTextField.tag]
-        passwordTextField.textColor = UIColor.lightGrayColor()
-        passwordTextField.delegate = self
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(passwordTextField)
-        let passwordCenterXConstraint = NSLayoutConstraint(item: passwordTextField, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let passwordLeftConstraint = NSLayoutConstraint(item: passwordTextField, attribute: .Leading, relatedBy: .Equal, toItem: self.view, attribute: .Leading, multiplier: 1, constant: 10)
-        let passwordCenterYContraint = NSLayoutConstraint(item: passwordTextField, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: -50)
-        self.view.addConstraint(passwordCenterXConstraint)
-        self.view.addConstraint(passwordCenterYContraint)
-        self.view.addConstraint(passwordLeftConstraint)
-        
-        signInButton = UIButton(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width-10, height: 75)))
-        signInButton.setTitle("Sign In", forState: .Normal)
-        signInButton.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(signInButton)
-        let signInCenterXConstraint = NSLayoutConstraint(item: signInButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let signInLeftConstraint = NSLayoutConstraint(item: signInButton, attribute: .Leading, relatedBy: .Equal, toItem: self.view, attribute: .Leading, multiplier: 1, constant: 10)
-        let signInCenterYContraint = NSLayoutConstraint(item: signInButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
-        self.view.addConstraint(signInCenterXConstraint)
-        self.view.addConstraint(signInCenterYContraint)
-        self.view.addConstraint(signInLeftConstraint)
-        signInButton.addTarget(self, action: "driverSignInAction", forControlEvents: .TouchUpInside)
+        self.view.backgroundColor = UIColor.clearColor()
+        drawScreen()
         
         //keyboard disappears whenever user taps somewhere else other than keyboard
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         view.addGestureRecognizer(tap)
     }
+    
+    func drawScreen() {
+        exitButton = UIButton(frame: CGRect(origin: CGPointZero, size: CGSize(width: 75, height: 75)))
+        exitButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        exitButton.titleLabel!.font = UIFont.systemFontOfSize(24)
+        exitButton.setTitle("X", forState: .Normal)
+        exitButton.translatesAutoresizingMaskIntoConstraints = false
+        exitButton.addTarget(self, action: "exitPage", forControlEvents: .TouchUpInside)
+        
+        emailTextField = UITextField(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width-10, height: 100)))
+        emailTextField.borderStyle = .Line
+        emailTextField.backgroundColor = UIColor(red: 54/255, green: 69/255, blue: 79/255, alpha: 0.8)
+        emailTextField.tag = 0
+        emailTextField.font = UIFont.systemFontOfSize(24)
+        emailTextField.returnKeyType = UIReturnKeyType.Done
+        emailTextField.text = placeholders[emailTextField.tag]
+        emailTextField.textColor = UIColor.lightGrayColor()
+        emailTextField.delegate = self
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        passwordTextField = UITextField(frame: CGRectMake(0, 0, self.view.frame.width-10, 75))
+        passwordTextField.borderStyle = .Line
+        passwordTextField.backgroundColor = UIColor(red: 54/255, green: 69/255, blue: 79/255, alpha: 0.8)
+        passwordTextField.tag = 1
+        passwordTextField.font = UIFont.systemFontOfSize(24)
+        passwordTextField.returnKeyType = UIReturnKeyType.Done
+        passwordTextField.text = placeholders[passwordTextField.tag]
+        passwordTextField.textColor = UIColor.lightGrayColor()
+        passwordTextField.delegate = self
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        signInButton = UIButton(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width, height: 75)))
+        signInButton.setTitle("Sign In", forState: .Normal)
+        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        signInButton.titleLabel?.font = UIFont.systemFontOfSize(24)
+        signInButton.backgroundColor = UIColor.clearColor()
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        signInButton.addTarget(self, action: "driverSignInAction", forControlEvents: .TouchUpInside)
+        
+        let screenStackView = UIStackView(frame: CGRect(origin: CGPointZero, size: CGSize(width: self.view.frame.width, height: self.view.frame.height)))
+        screenStackView.addArrangedSubview(emailTextField)
+        screenStackView.addArrangedSubview(passwordTextField)
+        let fillerView = UIView()
+        fillerView.translatesAutoresizingMaskIntoConstraints = false
+        fillerView.heightAnchor.constraintEqualToConstant(20).active = true
+        screenStackView.addArrangedSubview(fillerView)
+        screenStackView.addArrangedSubview(signInButton)
+        screenStackView.axis = .Vertical
+        screenStackView.alignment = .Fill
+        screenStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(screenStackView)
+        
+        screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, constant: -25).active = true
+        screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: -75).active = true
+        
+        self.view.addSubview(exitButton)
+        exitButton.topAnchor.constraintEqualToAnchor(self.view.topAnchor, constant: 50).active = true
+        exitButton.trailingAnchor.constraintEqualToAnchor(self.view.trailingAnchor, constant: -12).active = true
+        
+    }
+
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -131,7 +151,12 @@ class DriverLoginViewController: UIViewController, UITextFieldDelegate {
     
     //action called when user taps "Sign In"
     func driverSignInAction() {
-        checkForErrors()//check for improper inputs
+        self.modalListener?.returnFromModal(true)
+        self.dismissViewControllerAnimated(true, completion: {
+            self.modalListener?.goToApp()
+        })
+        return
+            checkForErrors()//check for improper inputs
         
         if(errorMessages.count > 0) {//show error messages if improper inputs exist
             handleErrors()
@@ -146,19 +171,11 @@ class DriverLoginViewController: UIViewController, UITextFieldDelegate {
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLoginKey")
                     NSUserDefaults.standardUserDefaults().setValue(self.emailTextField.text, forKey: "username")
                     NSUserDefaults.standardUserDefaults().synchronize()
+                    self.modalListener?.returnFromModal(true)
+                    self.dismissViewControllerAnimated(true, completion: {
+                        self.modalListener?.goToApp()
+                    })
                     
-                    //seque to main application
-                    let tabBarVC = UITabBarController()
-                    let mapVC = DriverMapViewController(nibName: "MapViewController", bundle: nil)
-                    let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
-                    let controllers = [mapVC, listVC]
-                    tabBarVC.viewControllers = controllers
-                    let mapImage = UIImage(named: "Map")
-                    let listImage = UIImage(named: "List")
-                    mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
-                    listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
-                    
-                    self.presentViewController(tabBarVC, animated: true, completion: nil)
                 } else {
                     // The login failed
                     if let error = error {
@@ -204,6 +221,13 @@ class DriverLoginViewController: UIViewController, UITextFieldDelegate {
     func dismissKeyboard() {
         view.endEditing(true)
     }
+    
+    func exitPage() {
+        modalListener?.returnFromModal(false)
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+
     
     
     

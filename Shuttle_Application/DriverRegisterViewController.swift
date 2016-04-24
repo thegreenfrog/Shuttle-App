@@ -8,7 +8,12 @@
 
 import UIKit
 
-class DriverRegisterViewController: UIViewController {
+protocol ModalDriverTransitionListener {
+    func returnFromModal(registered: Bool)
+    func goToApp()
+}
+
+class DriverRegisterViewController: UIViewController, ModalDriverTransitionListener {
 
     struct Constants {
     static let buttonFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 45))
@@ -54,16 +59,48 @@ class DriverRegisterViewController: UIViewController {
     func showSignInForDriver() {
         let signInVC = DriverLoginViewController()
         signInVC.modalTransitionStyle = .CoverVertical
+        signInVC.modalListener = self   // CH
         presentViewController(signInVC, animated: true, completion: nil)
     }
     
     func showSignUpForDriver() {
         let signUpVC = DriverSignUpViewController()
         signUpVC.modalTransitionStyle = .CoverVertical
+        signUpVC.modalListener = self //CH
         presentViewController(signUpVC, animated: true, completion: nil)
     }
-
-
+    
+    func returnFromModal(registered: Bool) {
+        if(registered) {
+            //show spinning wheel
+            let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+            loadingIndicator.userInteractionEnabled = false
+            loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+            loadingIndicator.startAnimating()
+            self.view.addSubview(loadingIndicator)
+            loadingIndicator.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+            loadingIndicator.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor).active = true
+            
+            
+        } else {
+            signInButton.hidden = false
+            signUpButton.hidden = false
+        }
+        
+    }
+    
+    func goToApp() {
+        //seque to main application
+        let mapVC = DriverMapViewController()
+        mapVC.title = "Uber Driver Bowdoin"
+//        let navVC = UINavigationController()
+//        navVC.viewControllers = [mapVC]
+//        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+//        navVC.navigationBar.tintColor = UIColor.whiteColor()
+//        
+        self.presentViewController(mapVC, animated: true, completion: nil)
+        
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
