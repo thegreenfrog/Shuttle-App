@@ -99,7 +99,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
-        
+
+//        let current = PFInstallation.currentInstallation()
+//        current["user"] = PFUser.currentUser()
+//        current.saveInBackground()
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()
@@ -298,11 +301,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func findDriver(loc: CLLocationCoordinate2D) {
         print(loc.latitude, loc.longitude)
         //find drivers
-        let driverQuery = PFInstallation.query()
-        driverQuery?.whereKey("channels", equalTo:"drivers")
         let geoPoint = PFGeoPoint(latitude: loc.latitude, longitude: loc.longitude)
-        driverQuery?.whereKey("location", nearGeoPoint: geoPoint)
+        
+        let userQuery = PFUser.query()
+        userQuery?.whereKey("location", nearGeoPoint: geoPoint)
 
+        let driverQuery = PFInstallation.query()
+        driverQuery!.whereKey("channels", equalTo: "drivers")
+        driverQuery!.whereKey("user", matchesQuery: userQuery!)
+        
         let push = PFPush()
         push.setQuery(driverQuery)
         push.setMessage("Looking for Drivers!")
