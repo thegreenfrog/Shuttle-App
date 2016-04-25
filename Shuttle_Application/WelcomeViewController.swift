@@ -19,7 +19,11 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.clearColor()
+        drawScreen()
         
+    }
+    
+    func drawScreen() {
         let welcomeLabel = UILabel(frame: Constants.labelFrame)
         welcomeLabel.textColor = UIColor.whiteColor()
         welcomeLabel.numberOfLines = 0
@@ -115,8 +119,6 @@ class WelcomeViewController: UIViewController {
         screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
         screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor).active = true
         screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, constant: -20).active = true
-        
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,15 +126,41 @@ class WelcomeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+/*
+    UIImage function that creates image from BezierPath. Used to create image of arrows
+    copied from http://digitalleaves.com/blog/2015/07/bezier-paths-in-practice-i-from-basic-shapes-to-custom-designable-controls/
+*/
+extension UIImage {
+    class func shapeImageWithBezierPath(bezierPath: UIBezierPath, fillColor: UIColor?, strokeColor: UIColor?, strokeWidth: CGFloat = 0.0) -> UIImage! {
+        //Normalize bezier path. We will apply a transform to our bezier path to ensure that it's placed at the coordinate axis. Then we can get its size.
+        bezierPath.applyTransform(CGAffineTransformMakeTranslation(-bezierPath.bounds.origin.x, -bezierPath.bounds.origin.y))
+        let size = CGSizeMake(bezierPath.bounds.size.width, bezierPath.bounds.size.height)
+        
+        //Initialize an image context with our bezier path normalized shape and save current context
+        UIGraphicsBeginImageContext(size)
+        let context = UIGraphicsGetCurrentContext()
+        CGContextSaveGState(context)
+        
+        //Set path
+        CGContextAddPath(context, bezierPath.CGPath)
+        
+        //Set parameters and draw
+        if strokeColor != nil {
+            strokeColor!.setStroke()
+            CGContextSetLineWidth(context, strokeWidth)
+        } else { UIColor.clearColor().setStroke() }
+        fillColor?.setFill()
+        
+        CGContextDrawPath(context, .FillStroke)
+        //Get the image from the current image context
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        //Restore context and close everything
+        CGContextRestoreGState(context)
+        UIGraphicsEndImageContext()
+        
+        return image
     }
-    */
-
+    
 }

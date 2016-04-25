@@ -10,6 +10,7 @@
 		8C0042E31C91C16A007D4FEC /* RequestLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0042E21C91C16A007D4FEC /* RequestLog.swift */; };
 		8C0042E51C9288E2007D4FEC /* RequestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */; };
 		8C0042EB1CA49696007D4FEC /* RequestTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */; };
+		8C027DAF1CCE637D008C8D00 /* VCAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C027DAE1CCE637D008C8D00 /* VCAnimator.swift */; };
 		8C08BA6B1CA6B311001DC98F /* RequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C08BA6A1CA6B311001DC98F /* RequestCell.swift */; };
 		8C0A168E1CB4B00600C09BA9 /* UserRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A168D1CB4B00600C09BA9 /* UserRegisterViewController.swift */; };
 		8C0A16921CB4B76600C09BA9 /* UserSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0A16911CB4B76600C09BA9 /* UserSignUpViewController.swift */; };
@@ -73,6 +74,7 @@
 		8C0042E21C91C16A007D4FEC /* RequestLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestLog.swift; sourceTree = "<group>"; };
 		8C0042E41C9288E2007D4FEC /* RequestTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestTableViewController.swift; sourceTree = "<group>"; };
 		8C0042EA1CA49695007D4FEC /* RequestTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RequestTableViewController.xib; sourceTree = "<group>"; };
+		8C027DAE1CCE637D008C8D00 /* VCAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VCAnimator.swift; sourceTree = "<group>"; };
 		8C08BA6A1CA6B311001DC98F /* RequestCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestCell.swift; sourceTree = "<group>"; };
 		8C0A168D1CB4B00600C09BA9 /* UserRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserRegisterViewController.swift; sourceTree = "<group>"; };
 		8C0A16911CB4B76600C09BA9 /* UserSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSignUpViewController.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				D071C36F1CB4581500457514 /* UserLoginViewController.swift */,
 				8C0A168D1CB4B00600C09BA9 /* UserRegisterViewController.swift */,
 				8C0A16911CB4B76600C09BA9 /* UserSignUpViewController.swift */,
+				8C027DAE1CCE637D008C8D00 /* VCAnimator.swift */,
 				8C633FAA1CC7396400431D24 /* WelcomePageViewController.swift */,
 				8C0A169B1CB5E67300C09BA9 /* WelcomeViewController.swift */,
 			);
@@ -397,6 +400,7 @@
 				8C0A16961CB5744200C09BA9 /* UIViewExtensions.swift in Sources */,
 				8C0A168E1CB4B00600C09BA9 /* UserRegisterViewController.swift in Sources */,
 				D071C3711CB4581500457514 /* UserLoginViewController.swift in Sources */,
+				8C027DAF1CCE637D008C8D00 /* VCAnimator.swift in Sources */,
 				8CFEC6831C83B77300C07B76 /* AppDelegate.swift in Sources */,
 				8C633FAB1CC7396500431D24 /* WelcomePageViewController.swift in Sources */,
 				8C08BA6B1CA6B311001DC98F /* RequestCell.swift in Sources */,

@@ -320,15 +320,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
-//        //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
-//        let pickUpObject = PFObject.init(className: "Request")
-//        pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
-//        pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
-//        //pickUpObject.setObject(pickUpLoc, forKey: "location")
-//        pickUpObject.setObject(currentAddress!, forKey: "address")
-//        pickUpObject.saveInBackgroundWithBlock({ (success, error) in
-//            print("object saved")
-//        })
         pinImage?.fadeOut(1.0, delay: 0, completion: {(finished: Bool) -> Void in
             //remove pin image from view and also remove all of its constraints
             self.pinImage?.removeConstraints()

@@ -13,20 +13,33 @@ protocol ModalUserTransitionListener {
     func goToApp()
 }
 
-class UserRegisterViewController: UIViewController, ModalUserTransitionListener {
+class UserRegisterViewController: UIViewController, ModalUserTransitionListener, UIViewControllerTransitioningDelegate {
     struct Constants {
         static let buttonFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 45))
         static let labelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 225, height: 100))
     }
     
+    let transition = VCAnimator()
+    
     var signInButton: UIButton!
     var signUpButton: UIButton!
-
+    
+    
+    // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.view.backgroundColor = UIColor.clearColor()
-        
+        drawScreen()
+        self.view.backgroundColor = UIColor.clearColor()//allows background image to show
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    //creates buttons for screen
+    func drawScreen() {
         signInButton = UIButton(frame: Constants.buttonFrame)
         signInButton.backgroundColor = UIColor.clearColor()
         signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -59,11 +72,8 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
         screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: 25).active = true
         screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, multiplier: 0.5).active = true
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
+    // MARK: - Button Actions
     
     func showSignIn() {
         let signInVC = UserLoginViewController()
@@ -114,20 +124,23 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener 
         navVC.viewControllers = [mapVC]
         navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
         navVC.navigationBar.tintColor = UIColor.whiteColor()
-
-            self.presentViewController(navVC, animated: true, completion: nil)
-        
+        navVC.transitioningDelegate = self//allows for custom transition
+        self.presentViewController(navVC, animated: true, completion: nil)
         
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
+/*
+    delegate function that indicates which transition animator to use
+*/
+extension UserRegisterViewController {
+    func animationControllerForPresentedController(
+        presented: UIViewController,
+        presentingController presenting: UIViewController,
+        sourceController source: UIViewController) ->
+        UIViewControllerAnimatedTransitioning? {
+            return transition
+    }
+}
+

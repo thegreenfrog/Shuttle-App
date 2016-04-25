@@ -11,6 +11,7 @@ import Parse
 
 class UserSignUpViewController: UIViewController, UITextFieldDelegate {
     struct Constants {
+        //error messages
         static let FirstNamePlaceHolder = "Please enter your first name"
         static let LastNamePlaceHolder = "Please enter your last name"
         static let EmailPlaceHolder = "Please enter your email address"
@@ -20,7 +21,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
         static let EmailRegex = "[^@]+[@][a-z0-9]+[.][a-z]*"
     }
     
-    let placeholders = ["First Name", "Last Name", "Username (email)", "Password", "Retype Password"]
+    let placeholders = ["First Name", "Last Name", "Username (email)", "Password", "Retype Password"]//textfield placeholders
     
     //input textfields
     var firstNameText: UITextField!
@@ -36,6 +37,23 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
     
     //string array to hold all error messages
     var errorMessages = [String]()
+    
+    
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor.clearColor()
+        drawScreen()
+        //dismisses keyboard when user taps outside of keyboard
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
     //helper function that draws all subviews necessary
     func drawScreen() {
@@ -109,12 +127,13 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
         signUpButton.addTarget(self, action: "signUpAction", forControlEvents: .TouchUpInside)
         
+        //put textfields in own stackview
         let screenStackView = UIStackView()
         screenStackView.addArrangedSubview(firstNameText)
         screenStackView.addArrangedSubview(lastNameText)
         screenStackView.addArrangedSubview(passText)
         screenStackView.addArrangedSubview(retypePassText)
-        
+        //filler View used to create space between button and textfields
         let fillerView = UIView()
         fillerView.translatesAutoresizingMaskIntoConstraints = false
         fillerView.heightAnchor.constraintEqualToConstant(20).active = true
@@ -133,20 +152,8 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
         exitButton.trailingAnchor.constraintEqualToAnchor(self.view.trailingAnchor, constant: -12).active = true
     }
 
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = UIColor.clearColor()
-        drawScreen()
-                //dismisses keyboard when user taps outside of keyboard
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
-        view.addGestureRecognizer(tap)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
+    // MARK: - Signup
     
     //displays errors in input fields
     func handleErrors() {
@@ -213,7 +220,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
                     }
                     self.handleErrors()
                 } else {
-                    //save user info
+                    //save user info in NSUserDefaults
                     let keyChainWrapper = KeychainWrapper()
                     keyChainWrapper.mySetObject(self.passText.text, forKey: kSecValueData)
                     keyChainWrapper.writeToKeychain()
@@ -221,6 +228,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
                     NSUserDefaults.standardUserDefaults().setValue(self.emailText.text, forKey: "username")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
+                    //exit modalView to transition to main app
                     self.modalListener?.returnFromModal(true)
                     self.dismissViewControllerAnimated(true, completion: {
                         self.modalListener?.goToApp()
@@ -270,16 +278,5 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
         modalListener?.returnFromModal(false)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

@@ -29,7 +29,29 @@ class UserLoginViewController: UIViewController, UITextFieldDelegate {
     
     let placeholders = ["Username (email)", "Password"]//placeholders for textfields
     
-    var errorMessages = [String]()
+    var errorMessages = [String]()//holds all error messages, though right now app just displays one error at a time
+    
+    
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = UIColor.clearColor()
+        drawScreen()
+        
+        //keyboard disappears whenever user taps somewhere else other than keyboard
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+    }
     
     //helper function to draw all subviews necessary
     func drawScreen() {
@@ -93,20 +115,8 @@ class UserLoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
-    override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        self.view.backgroundColor = UIColor.clearColor()
-        drawScreen()
-        
-        //keyboard disappears whenever user taps somewhere else other than keyboard
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
-        view.addGestureRecognizer(tap)
-    }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
+    // MARK: - Login
     
     func checkForErrors() {
         if emailTextField.textColor == UIColor.lightGrayColor() {
@@ -174,10 +184,12 @@ class UserLoginViewController: UIViewController, UITextFieldDelegate {
 
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    //exit modal screen back to Register VC
+    func exitPage() {
+        modalListener?.returnFromModal(false)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
+
     
     // MARK: - TextField Delegate Methods
     
@@ -207,22 +219,5 @@ class UserLoginViewController: UIViewController, UITextFieldDelegate {
     func dismissKeyboard() {
         view.endEditing(true)
     }
-
-    //exit modal screen back to Register VC
-    func exitPage() {
-        modalListener?.returnFromModal(false)
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
-    }
-    */
-    
 
 }
