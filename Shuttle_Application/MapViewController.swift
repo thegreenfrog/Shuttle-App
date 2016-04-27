@@ -99,10 +99,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
-
-//        let current = PFInstallation.currentInstallation()
-//        current["user"] = PFUser.currentUser()
-//        current.saveInBackground()
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()
@@ -130,7 +126,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         //create label above pin
         pinLabel = UIButton(frame: Constants.pinLabelFrame)
         pinLabel!.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        
         pinLabel!.setTitle("Set a pickup location", forState: .Normal)
         pinLabel!.setTitleColor(UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0), forState: .Normal)
         pinLabel!.layer.masksToBounds = true
@@ -146,10 +141,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         addRoute()
         dropStopLocationPins()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -320,6 +311,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
+        
+        //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
+        let pickUpObject = PFObject.init(className: "Request")
+        pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
+        pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
+        pickUpObject.setObject(currentAddress!, forKey: "address")
+        let firstName = PFUser.currentUser()?.valueForKey("firstName") as? String
+        let lastName = PFUser.currentUser()?.valueForKey("lastName") as? String
+        let fullName = (firstName ?? "") + (lastName ?? "")
+        pickUpObject.setObject(fullName, forKey: "name")
+        pickUpObject.saveInBackgroundWithBlock({ (success, error) in
+            print("object saved")
+        })
+        
         pinImage?.fadeOut(1.0, delay: 0, completion: {(finished: Bool) -> Void in
             //remove pin image from view and also remove all of its constraints
             self.pinImage?.removeConstraints()
@@ -342,15 +347,5 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.pinLabel?.fadeIn(1.0, delay: 0, completion: {_ in })
         })
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
