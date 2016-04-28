@@ -17,8 +17,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     struct Constants {
         static let Brunswick:CLLocation = CLLocation(latitude: 43.9108, longitude: -69.9631)
         static let MapRadius:CLLocationDistance = 1000
-        static let pinImageFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 45, height: 45))
-        static let pinLabelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 50))
     }
     
     enum MapType: Int {
@@ -27,9 +25,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         case Satellite
     }
     
-//    private var requestLog = RequestLog()
-//    private var tabBarVC = RequestTabBarController()
-//    
     var geoCoder = CLGeocoder()
     
     var requestDict = Dictionary<String, Int>()
@@ -138,7 +133,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         mapView.mapType = .Standard
         mapView.delegate = self
         
-        var refreshButtonTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapRefreshButton:")
+        let refreshButtonTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapRefreshButton:")
         refreshButton.addGestureRecognizer(refreshButtonTap)
         
         

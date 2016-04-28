@@ -13,7 +13,7 @@ protocol ModalDriverTransitionListener {
     func goToApp()
 }
 
-class DriverRegisterViewController: UIViewController, ModalDriverTransitionListener {
+class DriverRegisterViewController: UIViewController, ModalDriverTransitionListener, UIViewControllerTransitioningDelegate {
 
     struct Constants {
     static let buttonFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 45))
@@ -23,50 +23,67 @@ class DriverRegisterViewController: UIViewController, ModalDriverTransitionListe
     var signInButton: UIButton!
     var signUpButton: UIButton!
     
+    let transition = VCAnimator()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.clearColor()
         
         signInButton = UIButton(frame: Constants.buttonFrame)
         signInButton.setTitle("Sign In", forState: .Normal)
-        signInButton.setTitleColor(UIColor.grayColor(), forState: .Normal)
+        signInButton.layer.borderColor = UIColor.whiteColor().CGColor
+        signInButton.layer.borderWidth = 1.0
+        signInButton.titleLabel?.font = UIFont.systemFontOfSize(24)
+        signInButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         signInButton.layer.masksToBounds = true
         signInButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(signInButton)
-        let signInXConstraint = NSLayoutConstraint(item: signInButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let signInYConstraint = NSLayoutConstraint(item: signInButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 40)
-        self.view.addConstraint(signInXConstraint)
-        self.view.addConstraint(signInYConstraint)
         signInButton.addTarget(self, action: "showSignInForDriver", forControlEvents: .TouchUpInside)
         
         signUpButton = UIButton(frame: Constants.buttonFrame)
-       // signUpButton.backgroundColor = UIColor.clearColor()
-        signUpButton.setTitleColor(UIColor.grayColor(), forState: .Normal)
+        signUpButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        signUpButton.titleLabel?.font = UIFont.systemFontOfSize(20)
         signUpButton.setTitle("Sign Up", forState: .Normal)
         signUpButton.layer.masksToBounds = true
         signUpButton.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(signUpButton)
-        let signUpXConstraint = NSLayoutConstraint(item: signUpButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let signUpYConstraint = NSLayoutConstraint(item: signUpButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 100)
-        self.view.addConstraint(signUpXConstraint)
-        self.view.addConstraint(signUpYConstraint)
         signUpButton.addTarget(self, action: "showSignUpForDriver", forControlEvents: .TouchUpInside)
 
+        let screenStackView = UIStackView()
+        screenStackView.addArrangedSubview(signInButton)
+        screenStackView.addArrangedSubview(signUpButton)
+        screenStackView.axis = .Vertical
+        screenStackView.alignment = .Fill
+        screenStackView.spacing = 10
+        screenStackView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(screenStackView)
+        screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: 25).active = true
+        screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, multiplier: 0.5).active = true
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        signInButton.hidden = false
+        signUpButton.hidden = false
+    }
     
     func showSignInForDriver() {
         let signInVC = DriverLoginViewController()
         signInVC.modalTransitionStyle = .CoverVertical
+        signInVC.modalPresentationStyle = .OverCurrentContext
         signInVC.modalListener = self   // CH
+        signInButton.hidden = true
+        signUpButton.hidden = true
         presentViewController(signInVC, animated: true, completion: nil)
     }
     
     func showSignUpForDriver() {
         let signUpVC = DriverSignUpViewController()
         signUpVC.modalTransitionStyle = .CoverVertical
+        signUpVC.modalPresentationStyle = .OverCurrentContext
         signUpVC.modalListener = self //CH
+        signInButton.hidden = true
+        signUpButton.hidden = true
         presentViewController(signUpVC, animated: true, completion: nil)
     }
     
@@ -98,6 +115,7 @@ class DriverRegisterViewController: UIViewController, ModalDriverTransitionListe
 //        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
 //        navVC.navigationBar.tintColor = UIColor.whiteColor()
 //        
+        mapVC.transitioningDelegate = self
         self.presentViewController(mapVC, animated: true, completion: nil)
         
     }
@@ -107,4 +125,17 @@ class DriverRegisterViewController: UIViewController, ModalDriverTransitionListe
         // Dispose of any resources that can be recreated.
     }
     
+}
+
+/*
+delegate function that indicates which transition animator to use
+*/
+extension DriverRegisterViewController {
+    func animationControllerForPresentedController(
+        presented: UIViewController,
+        presentingController presenting: UIViewController,
+        sourceController source: UIViewController) ->
+        UIViewControllerAnimatedTransitioning? {
+            return transition
+    }
 }
