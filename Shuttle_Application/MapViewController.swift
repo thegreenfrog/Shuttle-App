@@ -27,8 +27,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         case Satellite
     }
     
-    private var requestLog = RequestLog()
-    private var tabBarVC = RequestTabBarController()
     var geoCoder = CLGeocoder()
     
     let locationManager = CLLocationManager()
@@ -139,8 +137,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let dropPinGesture = UILongPressGestureRecognizer(target: self, action: Selector("dropPin:"))
         mapView.addGestureRecognizer(dropPinGesture)
         
-        addRoute()
-        dropStopLocationPins()
+        //addRoute()
+        //dropStopLocationPins()
     }
     
     override func didReceiveMemoryWarning() {
@@ -173,7 +171,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         switch overlay {
         case is MKPolyline:
             let lineView = MKPolylineRenderer(overlay: overlay)
-            lineView.strokeColor = UIColor.lightGrayColor()
+            lineView.strokeColor = UIColor.blueColor()
             lineView.lineWidth = 5.0
             lineView.lineCap = .Round
             return lineView
@@ -301,10 +299,31 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         driverQuery!.whereKey("channels", equalTo: "drivers")
         driverQuery!.whereKey("user", matchesQuery: userQuery!)
         
-        let push = PFPush()
-        push.setQuery(driverQuery)
-        push.setMessage("Looking for Drivers!")
-        push.sendPushInBackground()
+//        let push = PFPush()
+//        push.setQuery(driverQuery)
+//        push.setMessage("Looking for Drivers!")
+//        push.sendPushInBackground()
+        
+        let request = MKDirectionsRequest()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.905, longitude: -69.965), addressDictionary: nil))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.9082982361642, longitude: -69.9546160278704), addressDictionary: nil))
+        request.requestsAlternateRoutes = false
+        request.transportType = .Automobile
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
+            if error != nil {
+                print(error)
+            }
+            if let unwrappedResponse = response {
+                for route in unwrappedResponse.routes {
+                    self.mapView.addOverlay(route.polyline)
+                    self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+                }
+            }
+            
+        }
         
     }
     
