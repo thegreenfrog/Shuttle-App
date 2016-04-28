@@ -27,9 +27,13 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         case Satellite
     }
     
-    private var requestLog = RequestLog()
-    private var tabBarVC = RequestTabBarController()
+//    private var requestLog = RequestLog()
+//    private var tabBarVC = RequestTabBarController()
+//    
     var geoCoder = CLGeocoder()
+    
+    var requestDict = Dictionary<String, Int>()
+    
     
     let locationManager = CLLocationManager()
     var resetViewLocation = true//only recenters user view of map at the start
@@ -62,7 +66,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         print(error)
     }
     
-    
     func drawScreen() {
         refreshButton = UIButton()
         refreshButton.backgroundColor = UIColor.lightGrayColor()
@@ -84,37 +87,47 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
         self.view.addSubview(screenStackView)
         
-        let viewHeight = self.view.frame.height //- (self.navigationController?.navigationBar.frame.height)!
+        let viewHeight = self.view.frame.height
        
-        
         mapView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         mapView.heightAnchor.constraintEqualToConstant(viewHeight * 7 / 8).active = true
         
         
         refreshButton.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
-//        refreshButton.heightAnchor.constraintEqualToConstant(viewHeight * 1 / 8).active = true
-   //     refreshButton.heightAnchor.constraintLessThanOrEqualToAnchor(self.view.heightAnchor, multiplier: 5.00).active = true
         refreshButton.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
 
-        
-        //Need to get rid of navbar at bottom, get rid of uimessup at top
-        
         screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
         screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor).active = true
-//        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
         screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         
     }
-    
+
+/* Refresh button action */
     func tapRefreshButton(recognizer:UITapGestureRecognizer){
         print("z")
         
-        //It works!
         
-        //Now refresh
+        let query: PFQuery = PFQuery(className: "Request")
+        
+        query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
+            
+            let object: NSArray = obj! as NSArray
+            for x in object {
+                
+                if self.requestDict[x.objectId!!] == nil {
+                    let lat = x["latitude"]!!.doubleValue
+                    let longit =  x["longitude"]!!.doubleValue
+                    let id = x.objectId!!
+                    
+                    self.dropRequestPins(lat, longitude: longit, requestID: id)
+                    
+                }
+            
+            }
+            //reload data
+        }
     }
 
-    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -145,40 +158,71 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         addRoute()
         dropStopLocationPins()
         queryParseForPins()
+        
     }
     
+/* Queries parse for pins that represent pickup requests */
     func queryParseForPins(){
         
         let query: PFQuery = PFQuery(className: "Request")
         
-        var lat = [Double]()
-        var long = [Double]()
-        
-        var objects = [NSObject]()
-        
         query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
             
-            var object: NSArray = obj! as NSArray
+            let object: NSArray = obj! as NSArray
             for x in object {
-                print(x)
+                
                 let lat = x["latitude"]!!.doubleValue
                 let longit =  x["longitude"]!!.doubleValue
-                print(lat)
-                print(longit)
-                
-                self.dropRequestPins(lat, longitude: longit)
+                let id = x.objectId!!
+                self.dropRequestPins(lat, longitude: longit, requestID: id)
             }
             //reload data
         }
         
     }
     
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? StopRequest {
+            let identifier = "pinId"
+            var view: MKPinAnnotationView
+            if let dequeuedPin = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView{
+                dequeuedPin.annotation = annotation
+                view = dequeuedPin
+            } else {
+                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                view.canShowCallout = true
+                view.calloutOffset = CGPoint(x: -5, y: 5)
+                view.rightCalloutAccessoryView = UIButton(type: .DetailDisclosure) as UIView
+            }
+            view.draggable = true
+            return view
+        }
+        return nil
+    }
     
+/* Function makes it so when youclick the calloutAccessory we display a UIAlertController */
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl){
+
+        var alertController = UIAlertController(title: "Pick up this student?", message: "If you select 'OK', this student will be added to your queue.", preferredStyle: .Alert)
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
+        
+        let ok = UIAlertAction(title: "OK", style: .Default) { (_) in }
+        //add action function
+        
+        alertController.addAction(cancel)
+        alertController.addAction(ok)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
     
-    func dropRequestPins(latitude: Double, longitude: Double){
+/* Drops pins for given requests on map onLoad */
+    func dropRequestPins(latitude: Double, longitude: Double, requestID: String){
         let coordinate = CLLocationCoordinate2DMake(CLLocationDegrees(latitude) , CLLocationDegrees(longitude))
         
-        let pin = StopRequest(title: "req", locationName: "this", coordinate: coordinate)
+        requestDict[requestID] = 1
+        
+        let pin = StopRequest(title: requestID, locationName: "this", coordinate: coordinate)
         mapView.addAnnotation(pin)
     }
     
