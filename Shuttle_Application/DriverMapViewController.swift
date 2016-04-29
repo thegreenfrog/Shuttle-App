@@ -32,13 +32,16 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     let locationManager = CLLocationManager()
     var resetViewLocation = true//only recenters user view of map at the start
-    
-    var pinImage:UIImageView?
-    var pinLabel:UIButton?
-    
+
     var mapView: MKMapView!
     
+    var refreshLabel: UIView!
     var refreshButton: UIButton!
+    var hidingRefreshBottomLayout: NSLayoutConstraint!
+    var showRefreshBottomLayout: NSLayoutConstraint!
+    var userMovedMap = false
+    var buttonShown = false
+    
     var currentAddress: String?
     
     
@@ -62,46 +65,54 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     }
     
     func drawScreen() {
+        refreshLabel = UIView()
+        refreshLabel.hidden = false
+        refreshLabel.backgroundColor = UIColor.lightGrayColor()
+        refreshLabel.translatesAutoresizingMaskIntoConstraints = false
         refreshButton = UIButton()
-        refreshButton.backgroundColor = UIColor.lightGrayColor()
+        refreshButton.backgroundColor = UIColor.whiteColor()
         refreshButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        refreshButton.setTitle("Refresh Pins", forState: .Normal)
-        
+        refreshButton.setTitle("Refresh Map", forState: .Normal)
+        refreshButton.addTarget(self, action: "tapRefreshButton", forControlEvents: .TouchUpInside)
+        refreshButton.layer.cornerRadius = 10
+        refreshButton.clipsToBounds = true
         refreshButton.translatesAutoresizingMaskIntoConstraints = false
+
+        
         
         mapView = MKMapView()
         mapView.mapType = .Standard
         mapView.translatesAutoresizingMaskIntoConstraints = false
         
         let screenStackView = UIStackView()
-        screenStackView.addArrangedSubview(refreshButton)
         screenStackView.addArrangedSubview(mapView)
         screenStackView.axis = .Vertical
         screenStackView.alignment = .Fill
         screenStackView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(screenStackView)
+        self.view.addSubview(refreshButton)
+        self.view.bringSubviewToFront(refreshButton)
+        refreshButton.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        hidingRefreshBottomLayout = refreshButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor, constant: 45)
+        hidingRefreshBottomLayout.active = true
+        showRefreshBottomLayout = refreshButton.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor, constant: 0)
+        showRefreshBottomLayout.active = false
         
-        let viewHeight = self.view.frame.height
-       
-        mapView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
-        mapView.heightAnchor.constraintEqualToConstant(viewHeight * 7 / 8).active = true
-        
-        
-        refreshButton.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
-        refreshButton.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
+        refreshButton.widthAnchor.constraintEqualToConstant(160).active = true
+        refreshButton.heightAnchor.constraintEqualToConstant(45).active = true
+
 
         screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
         screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor).active = true
         screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
+        screenStackView.heightAnchor.constraintEqualToAnchor(self.view.heightAnchor).active = true
         
     }
 
 /* Refresh button action */
-    func tapRefreshButton(recognizer:UITapGestureRecognizer){
+    func tapRefreshButton(){
         print("z")
-        
-        
         let query: PFQuery = PFQuery(className: "Request")
         
         query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
@@ -121,6 +132,10 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             }
             //reload data
         }
+        UIView.animateWithDuration(1.5, delay: 0.0, options: .TransitionCurlUp, animations: {
+            self.showRefreshBottomLayout.active = false
+            self.hidingRefreshBottomLayout.active = true
+            }, completion: nil)
     }
 
     // MARK: - Lifecycle
@@ -133,9 +148,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         mapView.mapType = .Standard
         mapView.delegate = self
         
-        let refreshButtonTap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapRefreshButton:")
-        refreshButton.addGestureRecognizer(refreshButtonTap)
-        
+        //refreshLabel.addTarget(self, action: "tapRefreshButton", forControlEvents: .TouchUpInside)
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()
@@ -172,6 +185,33 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
                 self.dropRequestPins(lat, longitude: longit, requestID: id)
             }
             //reload data
+        }
+        
+    }
+    
+    func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        //determine if user initiated change in map region
+        let view = mapView.subviews.first
+        if let recognizers = view?.gestureRecognizers {
+            for gesture in recognizers {
+                if gesture.state == UIGestureRecognizerState.Began || gesture.state == UIGestureRecognizerState.Ended {
+                    userMovedMap = true
+                    break;
+                }
+            }
+        }
+        
+    }
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        //show refresh map button if the button has not been shown yet and user initiated moving of map region
+        if userMovedMap && !buttonShown{
+            UIView.animateWithDuration(1.0, delay: 0.0, options: .TransitionCurlUp, animations: {
+                    self.hidingRefreshBottomLayout.active = false
+                    self.showRefreshBottomLayout.active = true
+                }, completion: nil)
+            buttonShown = true
+            userMovedMap = false
         }
         
     }

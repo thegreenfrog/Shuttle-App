@@ -110,13 +110,13 @@ class DriverRegisterViewController: UIViewController, ModalDriverTransitionListe
         //seque to main application
         let mapVC = DriverMapViewController()
         mapVC.title = "Uber Driver Bowdoin"
-//        let navVC = UINavigationController()
-//        navVC.viewControllers = [mapVC]
-//        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-//        navVC.navigationBar.tintColor = UIColor.whiteColor()
-//        
+        let navVC = UINavigationController()
+        navVC.viewControllers = [mapVC]
+        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+        navVC.navigationBar.tintColor = UIColor.whiteColor()
+        
         mapVC.transitioningDelegate = self
-        self.presentViewController(mapVC, animated: true, completion: nil)
+        self.presentViewController(navVC, animated: true, completion: nil)
         
     }
 
