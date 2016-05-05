@@ -304,26 +304,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 //        push.setMessage("Looking for Drivers!")
 //        push.sendPushInBackground()
         
-        let request = MKDirectionsRequest()
-        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.905, longitude: -69.965), addressDictionary: nil))
-        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.9082982361642, longitude: -69.9546160278704), addressDictionary: nil))
-        request.requestsAlternateRoutes = false
-        request.transportType = .Automobile
-        
-        let directions = MKDirections(request: request)
-        
-        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
-            if error != nil {
-                print(error)
-            }
-            if let unwrappedResponse = response {
-                for route in unwrappedResponse.routes {
-                    self.mapView.addOverlay(route.polyline)
-                    self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-                }
-            }
-            
-        }
+//        let request = MKDirectionsRequest()
+//        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.905, longitude: -69.965), addressDictionary: nil))
+//        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.9082982361642, longitude: -69.9546160278704), addressDictionary: nil))
+//        request.requestsAlternateRoutes = false
+//        request.transportType = .Automobile
+//        
+//        let directions = MKDirections(request: request)
+//        
+//        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
+//            if error != nil {
+//                print(error)
+//            }
+//            if let unwrappedResponse = response {
+//                for route in unwrappedResponse.routes {
+//                    self.mapView.addOverlay(route.polyline)
+//                    self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+//                }
+//            }
+//            
+//        }
         
     }
     
@@ -337,9 +337,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
         pickUpObject.setObject(currentAddress!, forKey: "address")
         let firstName = PFUser.currentUser()?.valueForKey("firstName") as? String
-        let lastName = PFUser.currentUser()?.valueForKey("lastName") as? String
-        let fullName = (firstName ?? "") + (lastName ?? "")
-        pickUpObject.setObject(fullName, forKey: "name")
+        pickUpObject.setObject(firstName!, forKey: "name")
+        
+        let id = PFUser.currentUser()?.objectId
+        pickUpObject.setObject(id!, forKey: "userObjectId")
         pickUpObject.saveInBackgroundWithBlock({ (success, error) in
             print("object saved")
         })

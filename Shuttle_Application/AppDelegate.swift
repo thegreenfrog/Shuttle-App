@@ -36,25 +36,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
-                    self.window?.rootViewController = welcomeVC
-//        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {//immediately segue to map if user is signed in already
-//            let tabBarVC = UITabBarController()
-//            let mapVC = MapViewController(nibName: "MapViewController", bundle: nil)
-//            let listVC = RequestTableViewController(nibName: "RequestTableViewController", bundle: nil)
-//            let controllers = [mapVC, listVC]
-//            tabBarVC.viewControllers = controllers
-//            let mapImage = UIImage(named: "Map")
-//            let listImage = UIImage(named: "List")
-//            mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
-//            listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
-//            self.window?.rootViewController = tabBarVC
-//            
-//        } else {//show login page
-//            let welcomeVC = WelcomeViewController()
-//            //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
-//            self.window?.rootViewController = welcomeVC
-//        }
+//                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
+//                    self.window?.rootViewController = welcomeVC
+        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {//immediately segue to map if user is signed in already
+            let navVC = UINavigationController()
+            let mapVC = MapViewController()
+            navVC.viewControllers = [mapVC]
+            navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+            navVC.navigationBar.tintColor = UIColor.whiteColor()
+            
+            
+            self.window?.rootViewController = navVC
+            
+        } else {//show login page
+            let welcomeVC = WelcomeViewController()
+            //let navigationController = UINavigationController(rootViewController: vc) ask me about this sometime
+            self.window?.rootViewController = welcomeVC
+        }
         
         return true
     }
