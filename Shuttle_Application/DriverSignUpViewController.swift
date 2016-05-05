@@ -226,6 +226,7 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
                     keyChainWrapper.writeToKeychain()
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLoginKey")
                     NSUserDefaults.standardUserDefaults().setValue(self.emailText.text, forKey: "username")
+                    NSUserDefaults.standardUserDefaults().setBool(false, forKey: "isUser")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
                     self.modalListener?.returnFromModal(true)

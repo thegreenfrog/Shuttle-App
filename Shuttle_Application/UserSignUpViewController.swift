@@ -226,6 +226,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
                     keyChainWrapper.writeToKeychain()
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasLoginKey")
                     NSUserDefaults.standardUserDefaults().setValue(self.emailText.text, forKey: "username")
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "isUser")
                     NSUserDefaults.standardUserDefaults().synchronize()
                     
                     //exit modalView to transition to main app

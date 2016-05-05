@@ -32,21 +32,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerUserNotificationSettings(settings)
         application.registerForRemoteNotifications()
         
-
-        
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
 //                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
 //                    self.window?.rootViewController = welcomeVC
-        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {//immediately segue to map if user is signed in already
-            let navVC = UINavigationController()
-            let mapVC = MapViewController()
-            navVC.viewControllers = [mapVC]
-            navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-            navVC.navigationBar.tintColor = UIColor.whiteColor()
+        if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {
+            //immediately segue to map if user is signed in already
+            if(NSUserDefaults.standardUserDefaults().boolForKey("isUser")) {
+                //user
+                let navVC = UINavigationController()
+                let mapVC = MapViewController()
+                navVC.viewControllers = [mapVC]
+                navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+                navVC.navigationBar.tintColor = UIColor.whiteColor()
+                
+                
+                self.window?.rootViewController = navVC
+            } else {
+                //driver
+                let navVC = UINavigationController()
+                let mapVC = DriverMapViewController()
+                navVC.viewControllers = [mapVC]
+                navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+                navVC.navigationBar.tintColor = UIColor.whiteColor()
+                
+                
+                self.window?.rootViewController = navVC
+
+            }
             
-            
-            self.window?.rootViewController = navVC
             
         } else {//show login page
             let welcomeVC = WelcomeViewController()
@@ -64,7 +78,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
     
+    func driverFound(notificationDictionary:[String: AnyObject]) {
+        if let news = notificationDictionary["alert"] as? String,
+            let url = notificationDictionary["link_url"] as? String {
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("driverComing", object: nil)
+        }
+    }
+    
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        let aps = userInfo["aps"] as! [String: AnyObject]
+        driverFound(aps)
         PFPush.handlePush(userInfo)
     }
 

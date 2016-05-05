@@ -15,6 +15,7 @@ import Parse
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     struct Constants {
+        static let driverComing = "driverComing"
         static let Brunswick:CLLocation = CLLocation(latitude: 43.9108, longitude: -69.9631)
         static let MapRadius:CLLocationDistance = 1000
         static let pinImageFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 45, height: 45))
@@ -32,6 +33,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     let locationManager = CLLocationManager()
     var resetViewLocation = true//only recenters user view of map at the start
     
+    var loadingIndicator: UIActivityIndicatorView?
     var pinImage:UIImageView?
     var pinLabel:UIButton?
 
@@ -110,6 +112,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             locationManager.requestLocation()
             //mapView.showsUserLocation = true
         }
+        
+        //allows screen to change states after driver accepts user pickup request
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "driverOnTheWay", name: Constants.driverComing, object: nil)
     
         //create and render pinImageIcon
         pinImage = UIImageView(frame: Constants.pinImageFrame)
@@ -350,13 +355,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.pinImage?.removeConstraints()
             self.pinImage?.removeFromSuperview()
             //show loading indicator in place of pin image
-            let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-            loadingIndicator.userInteractionEnabled = false
-            loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-            loadingIndicator.startAnimating()
-            self.view.addSubview(loadingIndicator)
-            loadingIndicator.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
-            loadingIndicator.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
+            self.loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+            self.loadingIndicator?.userInteractionEnabled = false
+            self.loadingIndicator?.translatesAutoresizingMaskIntoConstraints = false
+            self.loadingIndicator?.startAnimating()
+            self.view.addSubview(self.loadingIndicator!)
+            self.loadingIndicator?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+            self.loadingIndicator?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
             
             //send notification to nearest driver within 10 miles
             self.findDriver(pickUpLoc)
@@ -366,6 +371,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             self.pinLabel?.enabled = false
             self.pinLabel?.fadeIn(1.0, delay: 0, completion: {_ in })
         })
+    }
+    
+    func driverOnTheWay(notification: NSNotification) {
+        print("driver is on the way!")
+        //remove loadingIndicator
+        loadingIndicator?.hidden = true
+        pinLabel?.hidden = true
     }
 
 }
