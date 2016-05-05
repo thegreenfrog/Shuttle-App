@@ -301,7 +301,7 @@
 				TargetAttributes = {
 					8CFEC67E1C83B77200C07B76 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 8PTP855Z68;
+						DevelopmentTeam = FTE8QD3873;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -462,7 +462,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = edu.bowdoin.shuttleapp;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = edu.bowdoin.shuttleapp;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -484,6 +485,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -507,7 +509,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = edu.bowdoin.shuttleapp;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = edu.bowdoin.shuttleapp;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -522,6 +525,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -542,9 +546,9 @@
 				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lu.shuttle-app";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98777873-fd18-495e-81d8-6c8d81906131";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shuttle_Application/Shuttle_Application-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -564,9 +568,9 @@
 				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lu.shuttle-app";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "98777873-fd18-495e-81d8-6c8d81906131";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shuttle_Application/Shuttle_Application-Bridging-Header.h";
 			};
 			name = Release;

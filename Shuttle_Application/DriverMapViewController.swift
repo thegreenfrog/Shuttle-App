@@ -109,6 +109,8 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         screenStackView.heightAnchor.constraintEqualToAnchor(self.view.heightAnchor).active = true
         
     }
+    
+    
 
 /* Refresh button action */
     func tapRefreshButton(){
@@ -135,6 +137,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         UIView.animateWithDuration(1.5, delay: 0.0, options: .TransitionCurlUp, animations: {
             self.showRefreshBottomLayout.active = false
             self.hidingRefreshBottomLayout.active = true
+            self.buttonShown = false
             }, completion: nil)
     }
 
@@ -164,7 +167,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         }
         
         addRoute()
-        dropStopLocationPins()
+       // dropStopLocationPins()
         queryParseForPins()
         
     }
@@ -216,6 +219,8 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
     }
     
+    
+    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? StopRequest {
             let identifier = "pinId"
@@ -235,20 +240,110 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         return nil
     }
     
+    
 /* Function makes it so when youclick the calloutAccessory we display a UIAlertController */
     func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl){
-
+        
         var alertController = UIAlertController(title: "Pick up this student?", message: "If you select 'OK', this student will be added to your queue.", preferredStyle: .Alert)
         
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
         
-        let ok = UIAlertAction(title: "OK", style: .Default) { (_) in }
+        let ok = UIAlertAction(title: "OK", style: .Default) {
+            (_) in self.handleOK(view.annotation?.title) //self.handleOK(view)
+        }
+        
+        
         //add action function
         
         alertController.addAction(cancel)
         alertController.addAction(ok)
         
+        
+        
+       // let push = PFPush()
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func handleOK(annotationView: MKAnnotationView){
+        let studentID = annotationView.annotation?.title!!
+        
+        let reqQuery = PFQuery(className: "Request")
+        reqQuery.whereKey("objectId", equalTo: studentID!)
+        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
+            if let req = objects {
+                
+                let userID = req["userObjectId"] as! String
+                
+                let userQuery = PFUser.query()
+                userQuery?.whereKey("objectId", equalTo: userID)
+                
+                let installationUser = PFInstallation.query()
+                
+                installationUser?.whereKey("user", matchesQuery: userQuery!)
+                
+                let push = PFPush()
+                
+                push.setQuery(installationUser)
+                push.setMessage("A drive will be coming to you!")
+                push.sendPushInBackground()
+                
+               // annotationView.removeFromSuperview()
+              //  annotationView.tintColor = UIColor.greenColor()
+            }
+        })
+
+    }
+    
+    
+    func handleOK(title: String??){
+        
+        print("yo")
+        
+        let studentID = title!!
+        
+        let reqQuery = PFQuery(className: "Request")
+        reqQuery.whereKey("objectId", equalTo: studentID)
+        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
+            if let req = objects {
+                
+                let userID = req["userObjectId"] as! String
+                
+                let userQuery = PFUser.query()
+                userQuery?.whereKey("objectId", equalTo: userID)
+                
+                let installationUser = PFInstallation.query()
+                
+                installationUser?.whereKey("user", matchesQuery: userQuery!)
+                
+                let push = PFPush()
+                
+                push.setQuery(installationUser)
+                push.setMessage("A drive will be coming to you!")
+                push.sendPushInBackground()
+                
+            }
+        })
+        
+        
+        /*
+        var query: PFQuery = PFUser.query()!
+        query.whereKey("objectId", equalTo: studentID)
+        
+        
+        
+        let userID: PFQuery = PFUser.query()!
+        
+        
+        let intallationUser = PFInstallation.query()
+        intallationUser?.whereKey("user", matchesQuery: query)
+        
+        let push = PFPush()
+        push.setQuery(intallationUser)
+        push.setMessage("A driver will be coming to you!")
+        push.sendPushInBackground()
+        
+        print("hello there")
+        */
     }
     
 /* Drops pins for given requests on map onLoad */
@@ -259,11 +354,15 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
         let pin = StopRequest(title: requestID, locationName: "this", coordinate: coordinate)
         mapView.addAnnotation(pin)
+        
+    
+    
     }
     
     override func viewDidAppear(animated: Bool) {
         
     }
+    
     
     func dropStopLocationPins() {
         let thePath = NSBundle.mainBundle().pathForResource("RouteCoord", ofType: "plist")
@@ -273,7 +372,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             let p = CGPointFromString(location as! String)
             let location = CLLocationCoordinate2DMake(CLLocationDegrees(p.x), CLLocationDegrees(p.y))
             let pin = StopRequest(title: name as! String, locationName: "Bowdoin", coordinate: location)
-            
             mapView.addAnnotation(pin)
         }
     }
