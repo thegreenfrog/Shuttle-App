@@ -114,7 +114,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
         
         //allows screen to change states after driver accepts user pickup request
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "driverOnTheWay", name: Constants.driverComing, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "driverOnTheWay:", name: Constants.driverComing, object: nil)
     
         //create and render pinImageIcon
         pinImage = UIImageView(frame: Constants.pinImageFrame)
@@ -376,8 +376,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func driverOnTheWay(notification: NSNotification) {
         print("driver is on the way!")
         //remove loadingIndicator
-        loadingIndicator?.hidden = true
-        pinLabel?.hidden = true
+        loadingIndicator?.removeFromSuperview()
+        loadingIndicator = nil
+        pinLabel?.removeFromSuperview()
+        pinLabel = nil
     }
 
 }

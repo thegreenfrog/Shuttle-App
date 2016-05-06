@@ -212,6 +212,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
             user.password = passText.text
             user["firstName"] = firstNameText.text
             user["lastName"] = lastNameText.text
+            user.setValue(true, forKey: "isUser")
             user.signUpInBackgroundWithBlock({
                 (succeeded: Bool, error: NSError?) -> Void in
                 if let error = error {

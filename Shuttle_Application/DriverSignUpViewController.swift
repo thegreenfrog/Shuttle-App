@@ -212,6 +212,7 @@ class DriverSignUpViewController: UIViewController, UITextFieldDelegate {
             driver.password = passText.text
             driver["firstName"] = firstNameText.text
             driver["lastName"] = lastNameText.text
+            driver.setValue(false, forKey: "isUser")
             driver.signUpInBackgroundWithBlock({
                 (succeeded: Bool, error: NSError?) -> Void in
                 if let error = error {

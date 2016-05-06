@@ -34,8 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-//                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
-//                    self.window?.rootViewController = welcomeVC
+                    let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
+                    self.window?.rootViewController = welcomeVC
         if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {
             //immediately segue to map if user is signed in already
             if(NSUserDefaults.standardUserDefaults().boolForKey("isUser")) {
@@ -79,11 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func driverFound(notificationDictionary:[String: AnyObject]) {
-        if let news = notificationDictionary["alert"] as? String,
-            let url = notificationDictionary["link_url"] as? String {
-                
-                NSNotificationCenter.defaultCenter().postNotificationName("driverComing", object: nil)
-        }
+        NSNotificationCenter.defaultCenter().postNotificationName("driverComing", object: nil)
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
