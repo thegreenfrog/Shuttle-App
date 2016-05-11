@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.registerForRemoteNotifications()
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        
+        self.window?.makeKeyAndVisible()
                     let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
                     self.window?.rootViewController = welcomeVC
         if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {
