@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
             endingLineNumber = "62"
-            landmarkName = "showSignInForDriver()"
+            landmarkName = "viewDidLoad()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484077037.245167"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "queryParseForPins()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484077037.245167"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "queryParseForPins()"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484077037.245167"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "112"
-            endingLineNumber = "112"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
             landmarkName = "DriverMapViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -74,77 +74,125 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484116605.070016"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "304"
-            endingLineNumber = "304"
-            landmarkName = "handleOK(_:)"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
+            landmarkName = "getETA(_:push:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484116605.070016"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
-            landmarkName = "handleOK(_:)"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "getETA(_:push:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Shuttle_Application.DriverMapViewController.getETA (__ObjC.MKDirections, push : __ObjC.PFPush) -&gt; ()"
+                  moduleName = "Shuttle_Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jamesboyle/Library/Developer/Shuttle-App/Shuttle_Application/DriverMapViewController.swift"
+                  timestampString = "484773512.28191"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "204"
+                  endingLineNumber = "204"
+                  offsetFromSymbolStart = "28">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Shuttle_Application.DriverMapViewController.(getETA (__ObjC.MKDirections, push : __ObjC.PFPush) -&gt; ()).(closure #1)"
+                  moduleName = "Shuttle_Application"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/jamesboyle/Library/Developer/Shuttle-App/Shuttle_Application/DriverMapViewController.swift"
+                  timestampString = "484773512.28209"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "206"
+                  endingLineNumber = "206"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Shuttle_Application/DriverMapViewController.swift"
+            timestampString = "484777582.996536"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "getRoutes(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484116605.070016"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
-            landmarkName = "handleOK(_:)"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "getRoutes(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484116605.070016"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
-            landmarkName = "handleOK(_:)"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "getRoutes(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Shuttle_Application/DriverMapViewController.swift"
-            timestampString = "484116605.070016"
+            timestampString = "484777582.996536"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
-            landmarkName = "handleOK(_:)"
-            landmarkType = "5">
+            startingLineNumber = "410"
+            endingLineNumber = "410"
+            landmarkName = "DriverMapViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

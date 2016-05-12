@@ -36,6 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
                     let welcomeVC = WelcomePageViewController(transitionStyle: .Scroll, navigationOrientation: .Horizontal, options: nil)
                     self.window?.rootViewController = welcomeVC
+        
         if NSUserDefaults.standardUserDefaults().boolForKey("hasLoginKey") {
             //immediately segue to map if user is signed in already
             if(NSUserDefaults.standardUserDefaults().boolForKey("isUser")) {

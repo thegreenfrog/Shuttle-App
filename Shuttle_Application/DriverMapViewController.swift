@@ -44,26 +44,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
     
     var currentAddress: String?
     
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let location = locations.last! as CLLocation
-        if(resetViewLocation) {
-            let center = CLLocationCoordinate2D(latitude: Constants.Brunswick.coordinate.latitude, longitude: Constants.Brunswick.coordinate.longitude)
-            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
-            
-            self.mapView.setRegion(region, animated: true)
-            
-            //THIS ZOOMS OUR REGION IN...............................
-            
-            resetViewLocation = false
-        }
-        
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print(error)
-    }
-    
     func drawScreen() {
         refreshLabel = UIView()
         refreshLabel.hidden = false
@@ -110,38 +90,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
     }
     
-    
-
-/* Refresh button action */
-    func tapRefreshButton(){
-        print("z")
-        let query: PFQuery = PFQuery(className: "Request")
-        
-        query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
-            
-            let object: NSArray = obj! as NSArray
-            for x in object {
-                
-                if self.requestDict[x.objectId!!] == nil {
-                    let lat = x["latitude"]!!.doubleValue
-                    let longit =  x["longitude"]!!.doubleValue
-                    let id = x.objectId!!
-                    
-                    self.dropRequestPins(lat, longitude: longit, requestID: id)
-                    
-                }
-            
-            }
-            //reload data
-        }
-        UIView.animateWithDuration(1.5, delay: 0.0, options: .TransitionCurlUp, animations: {
-            self.showRefreshBottomLayout.active = false
-            self.hidingRefreshBottomLayout.active = true
-            self.buttonShown = false
-            }, completion: nil)
-    }
-
-    // MARK: - Lifecycle
+// MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,12 +112,122 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             locationManager.delegate = self
             locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
             locationManager.requestLocation()
-            //mapView.showsUserLocation = true
+            mapView.showsUserLocation = true
         }
         
-        addRoute()
-       // dropStopLocationPins()
         queryParseForPins()
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+/*  Creates a directions object for the driver location and the user location.
+Returns a tuple (two identical objects) to avoid error of using the same directions object for two calculations
+simultaneously */
+    func getDirections(view: MKAnnotationView) -> (dir1: MKDirections, dir2: MKDirections) {
+        
+        let pickupCoordinate = view.annotation?.coordinate
+        
+        let directionsRequest : MKDirectionsRequest = MKDirectionsRequest()
+        
+        let driverLat = mapView.userLocation.coordinate.latitude
+        let driverLong = mapView.userLocation.coordinate.longitude
+        
+        let requesterLat = view.annotation?.coordinate.latitude
+        let requesterLong = view.annotation?.coordinate.longitude
+        
+        //  directionsRequest.source = mapView.
+        
+        directionsRequest.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: driverLat, longitude: driverLong), addressDictionary: nil))
+        
+        directionsRequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: requesterLat!, longitude: requesterLong!), addressDictionary: nil))
+        
+        directionsRequest.transportType = .Automobile
+        
+        let directions = MKDirections(request: directionsRequest)
+        
+        let directions2 = MKDirections(request: directionsRequest)
+        
+        return (directions, directions2)
+    }
+
+/* Refresh button action */
+    func tapRefreshButton(){
+        print("z")
+        let query: PFQuery = PFQuery(className: "Request")
+        
+        query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
+            
+            let object: NSArray = obj! as NSArray
+            for x in object {
+                
+                if self.requestDict[x.objectId!!] == nil {
+                    let lat = x["latitude"]!!.doubleValue
+                    let longit =  x["longitude"]!!.doubleValue
+                    let id = x.objectId!!
+                    
+                    self.dropRequestPins(lat, longitude: longit, requestID: id)
+                    
+                }
+                
+            }
+            //reload data
+        }
+        UIView.animateWithDuration(1.5, delay: 0.0, options: .TransitionCurlUp, animations: {
+            self.showRefreshBottomLayout.active = false
+            self.hidingRefreshBottomLayout.active = true
+            self.buttonShown = false
+            }, completion: nil)
+    }
+    
+    func getETA(directions: MKDirections, push: PFPush) {
+        
+        directions.calculateETAWithCompletionHandler { response, error in
+            
+            guard let response = response else {
+                //error
+                return
+            }
+            
+            let seconds  = lroundf(Float(response.expectedTravelTime))
+            
+            let mins = (seconds % 3600) / 60
+            
+            push.setMessage("A driver will be coming. ETA: \(mins) mins")
+            push.sendPushInBackground()
+            
+            //return mins
+        }
+    }
+    
+/* This function draws the route for the drive */
+    func getRoutes(directions: MKDirections) {
+        
+            directions.calculateDirectionsWithCompletionHandler{ response,error in
+            
+            guard let response = response else {
+                //error 
+                return
+            }
+                
+            for result in response.routes {
+                //if there is a route already drawn, delete the route first
+                if (!self.mapView.overlays.isEmpty){
+                    self.mapView.removeOverlays(self.mapView.overlays)
+                }
+                
+                self.mapView.addOverlay(result.polyline)
+                self.mapView.setVisibleMapRect(result.polyline.boundingMapRect, animated: true)
+            }
+        }
         
     }
     
@@ -190,6 +249,84 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             //reload data
         }
         
+    }
+    
+/*Handles driver OK on alertView by querying parse, sending notification w/ ETA, and drawing to map*/
+    func handleOK(annotationView: MKAnnotationView){
+        let studentID = annotationView.annotation?.title!!
+        
+        let getDirectionsResult = getDirections(annotationView)
+        let directionsForETA = getDirectionsResult.dir1
+        let directionsForRoutes = getDirectionsResult.dir2
+        
+        let reqQuery = PFQuery(className: "Request")
+        reqQuery.whereKey("objectId", equalTo: studentID!)
+        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
+            if let req = objects {
+                
+                let userID = req["userObjectId"] as! String
+                
+                let userQuery = PFUser.query()
+                userQuery?.whereKey("objectId", equalTo: userID)
+                
+                let installationUser = PFInstallation.query()
+                
+                installationUser?.whereKey("user", matchesQuery: userQuery!)
+                
+                let push = PFPush()
+                
+                push.setQuery(installationUser)
+                
+                self.getETA(directionsForETA, push: push)
+                
+                // annotationView.removeFromSuperview()
+                //  annotationView.tintColor = UIColor.greenColor()
+            }
+        })
+        getRoutes(directionsForRoutes)
+    }
+    
+/* Drops pins for given requests on map onLoad */
+    func dropRequestPins(latitude: Double, longitude: Double, requestID: String){
+        let coordinate = CLLocationCoordinate2DMake(CLLocationDegrees(latitude) , CLLocationDegrees(longitude))
+        
+        requestDict[requestID] = 1
+        
+        let pin = StopRequest(title: requestID, locationName: "this", coordinate: coordinate)
+        mapView.addAnnotation(pin)
+        
+    }
+    
+//MARK: CLLocation Functions
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let location = locations.last! as CLLocation
+        if(resetViewLocation) {
+            let center = CLLocationCoordinate2D(latitude: Constants.Brunswick.coordinate.latitude, longitude: Constants.Brunswick.coordinate.longitude)
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            
+            self.mapView.setRegion(region, animated: true)
+            
+            //THIS ZOOMS OUR REGION IN...............................
+            
+            resetViewLocation = false
+        }
+        
+    }
+    
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        print(error)
+    }
+    
+//MARK: mapView stuff
+    
+    /*required to render map overlay */
+    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer {
+        
+        let renderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
+        renderer.strokeColor = UIColor.blueColor()
+        renderer.lineWidth = 1.0
+        return renderer
     }
     
     func mapView(mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
@@ -219,8 +356,6 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         
     }
     
-    
-    
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? StopRequest {
             let identifier = "pinId"
@@ -249,120 +384,17 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (_) in }
         
         let ok = UIAlertAction(title: "OK", style: .Default) {
-            (_) in self.handleOK(view.annotation?.title) //self.handleOK(view)
+            (_) in self.handleOK(view)
         }
-        
-        
-        //add action function
         
         alertController.addAction(cancel)
         alertController.addAction(ok)
         
         
-        
-       // let push = PFPush()
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    func handleOK(annotationView: MKAnnotationView){
-        let studentID = annotationView.annotation?.title!!
-        
-        let reqQuery = PFQuery(className: "Request")
-        reqQuery.whereKey("objectId", equalTo: studentID!)
-        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
-            if let req = objects {
-                
-                let userID = req["userObjectId"] as! String
-                
-                let userQuery = PFUser.query()
-                userQuery?.whereKey("objectId", equalTo: userID)
-                
-                let installationUser = PFInstallation.query()
-                
-                installationUser?.whereKey("user", matchesQuery: userQuery!)
-                
-                let push = PFPush()
-                
-                push.setQuery(installationUser)
-                push.setMessage("A drive will be coming to you!")
-                push.sendPushInBackground()
-                
-               // annotationView.removeFromSuperview()
-              //  annotationView.tintColor = UIColor.greenColor()
-            }
-        })
-
-    }
-    
-    
-    func handleOK(title: String??){
-        
-        print("yo")
-        
-        let studentID = title!!
-        
-        let reqQuery = PFQuery(className: "Request")
-        reqQuery.whereKey("objectId", equalTo: studentID)
-        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
-            if let req = objects {
-                
-                let userID = req["userObjectId"] as! String
-                
-                let userQuery = PFUser.query()
-                userQuery?.whereKey("objectId", equalTo: userID)
-                
-                let installationUser = PFInstallation.query()
-                
-                installationUser?.whereKey("user", matchesQuery: userQuery!)
-                
-                let push = PFPush()
-                
-                push.setQuery(installationUser)
-                push.setMessage("A drive will be coming to you!")
-                push.sendPushInBackground()
-                
-            }
-        })
-        
-        
-        /*
-        var query: PFQuery = PFUser.query()!
-        query.whereKey("objectId", equalTo: studentID)
-        
-        
-        
-        let userID: PFQuery = PFUser.query()!
-        
-        
-        let intallationUser = PFInstallation.query()
-        intallationUser?.whereKey("user", matchesQuery: query)
-        
-        let push = PFPush()
-        push.setQuery(intallationUser)
-        push.setMessage("A driver will be coming to you!")
-        push.sendPushInBackground()
-        
-        print("hello there")
-        */
-    }
-    
-/* Drops pins for given requests on map onLoad */
-    func dropRequestPins(latitude: Double, longitude: Double, requestID: String){
-        let coordinate = CLLocationCoordinate2DMake(CLLocationDegrees(latitude) , CLLocationDegrees(longitude))
-        
-        requestDict[requestID] = 1
-        
-        let pin = StopRequest(title: requestID, locationName: "this", coordinate: coordinate)
-        mapView.addAnnotation(pin)
-        
-    
-    
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-    }
-    
+//MARK: OLD STUFF
     
     func dropStopLocationPins() {
         let thePath = NSBundle.mainBundle().pathForResource("RouteCoord", ofType: "plist")
@@ -375,12 +407,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
             mapView.addAnnotation(pin)
         }
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+ 
     func addRoute() {
         let thePath = NSBundle.mainBundle().pathForResource("RoutePath", ofType: "plist")
         let stopsArray = NSArray(contentsOfFile: thePath!)
