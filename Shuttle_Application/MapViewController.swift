@@ -34,8 +34,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     var resetViewLocation = true//only recenters user view of map at the start
     
     var loadingIndicator: UIActivityIndicatorView?
-    var pinImage:UIImageView?
-    var pinLabel:UIButton?
+    var pinImage: UIImageView?
+    var pinLabel: UIButton?
+    var timer: NSTimer?
+    var waitingLabelToggle = true
 
     var mapView: MKMapView!
 
@@ -135,7 +137,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pinLabel!.setTitle("Set a pickup location", forState: .Normal)
         pinLabel!.setTitleColor(UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0), forState: .Normal)
         pinLabel!.layer.masksToBounds = true
-        pinLabel!.layer.cornerRadius = 20
+        pinLabel!.layer.cornerRadius = 10
         pinLabel?.addTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
         pinLabel?.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(pinLabel!)
@@ -310,6 +312,68 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         
     }
     
+    func cancelRequest() {
+        //get most recent request made by the user
+        let userId = PFUser.currentUser()?.objectId
+        let getReq = PFQuery(className: "Request")
+        getReq.whereKey("userObjectId", equalTo: userId!)
+        getReq.orderByDescending("createdAt")
+        getReq.getFirstObjectInBackgroundWithBlock({ (obj, err) -> Void in
+            if err != nil {
+                let alert = UIAlertController(title: "Could not cancel", message: "\(err)", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+                return
+            }
+            if let req = obj {
+                let addr = req.valueForKey("address") as! String
+                print("\(addr)")
+                req.deleteInBackgroundWithBlock({ (succ, err) -> Void in
+                    if !succ || err != nil {
+                        print("delete not successful")
+                        return
+                    }
+                    let alert = UIAlertController(title: "Cancel Sucessful", message: "", preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                    
+                    
+                    //restore original view
+                    self.loadingIndicator?.removeFromSuperview()
+                    self.loadingIndicator = nil
+                    self.timer?.invalidate()
+                    self.pinLabel!.setTitle("Set a pickup location", forState: .Normal)
+                    self.pinLabel?.removeTarget(self, action: "cancelRequest", forControlEvents: .TouchUpInside)
+                    self.pinLabel?.addTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
+                    self.pinImage = UIImageView(frame: Constants.pinImageFrame)
+                    self.pinImage?.center = self.view.center
+                    self.pinImage?.image = UIImage(named: "location")
+                    self.pinImage!.translatesAutoresizingMaskIntoConstraints = false
+                    self.view.addSubview(self.pinImage!)
+                    self.pinImage?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+                    self.pinImage?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
+                    return
+                })
+            }
+        })
+        
+    }
+    
+    //swap label text so user knows how to cancel request
+    func toggleWaitingLabel() {
+        if !waitingLabelToggle {
+            UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {() in
+                self.pinLabel?.enabled = true
+                }, completion: nil)
+            
+        } else {
+            UIView.animateWithDuration(1.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {() in
+                self.pinLabel?.enabled = false
+                }, completion: nil)
+        }
+        waitingLabelToggle = !waitingLabelToggle
+    }
+    
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
@@ -332,6 +396,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
             //remove pin image from view and also remove all of its constraints
             self.pinImage?.removeConstraints()
             self.pinImage?.removeFromSuperview()
+            self.pinImage = nil
             //show loading indicator in place of pin image
             self.loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
             self.loadingIndicator?.userInteractionEnabled = false
@@ -346,8 +411,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         })
         pinLabel?.fadeOut(1.0, delay: 0.0, completion: { (finished: Bool) -> Void in
             self.pinLabel?.setTitle("Finding Driver", forState: .Disabled)
+            self.pinLabel?.setTitle("Tap to Cancel", forState: .Normal)
+            self.pinLabel?.removeTarget(self, action: "pickUpPerson:", forControlEvents: .TouchUpInside)
+            self.pinLabel?.addTarget(self, action: "cancelRequest", forControlEvents: .TouchUpInside)
             self.pinLabel?.enabled = false
             self.pinLabel?.fadeIn(1.0, delay: 0, completion: {_ in })
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: "toggleWaitingLabel", userInfo: nil, repeats: true)
         })
     }
     
