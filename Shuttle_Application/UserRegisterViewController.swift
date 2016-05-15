@@ -119,11 +119,11 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener,
     func goToApp() {
         //seque to main application
         let mapVC = MapViewController()
-        mapVC.title = "Uber Bowdoin"
         let navVC = UINavigationController()
         navVC.viewControllers = [mapVC]
         navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
         navVC.navigationBar.tintColor = UIColor.whiteColor()
+        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         navVC.transitioningDelegate = self//allows for custom transition
         self.presentViewController(navVC, animated: true, completion: nil)
         

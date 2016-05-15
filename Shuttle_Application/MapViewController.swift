@@ -94,11 +94,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Uber Bowdoin"
         
         drawScreen()
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self.revealViewController(), action: "revealToggle:")
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()
@@ -304,31 +307,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         driverQuery!.whereKey("channels", equalTo: "drivers")
         driverQuery!.whereKey("user", matchesQuery: userQuery!)
         
-//        let push = PFPush()
-//        push.setQuery(driverQuery)
-//        push.setMessage("Looking for Drivers!")
-//        push.sendPushInBackground()
-        
-//        let request = MKDirectionsRequest()
-//        request.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.905, longitude: -69.965), addressDictionary: nil))
-//        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: 43.9082982361642, longitude: -69.9546160278704), addressDictionary: nil))
-//        request.requestsAlternateRoutes = false
-//        request.transportType = .Automobile
-//        
-//        let directions = MKDirections(request: request)
-//        
-//        directions.calculateDirectionsWithCompletionHandler { (response, error) -> Void in
-//            if error != nil {
-//                print(error)
-//            }
-//            if let unwrappedResponse = response {
-//                for route in unwrappedResponse.routes {
-//                    self.mapView.addOverlay(route.polyline)
-//                    self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
-//                }
-//            }
-//            
-//        }
         
     }
     
@@ -380,6 +358,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         loadingIndicator = nil
         pinLabel?.removeFromSuperview()
         pinLabel = nil
+    }
+    
+    func showSideBar() {
+//        revealToggle(self)
     }
 
 }

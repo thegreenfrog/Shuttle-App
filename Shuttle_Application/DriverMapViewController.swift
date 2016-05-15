@@ -132,9 +132,7 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
 /*  Creates a directions object for the driver location and the user location.
 Returns a tuple (two identical objects) to avoid error of using the same directions object for two calculations
 simultaneously */
-    func getDirections(view: MKAnnotationView) -> (dir1: MKDirections, dir2: MKDirections) {
-        
-        let pickupCoordinate = view.annotation?.coordinate
+    func getDirections(view: MKAnnotationView) -> MKDirections {
         
         let directionsRequest : MKDirectionsRequest = MKDirectionsRequest()
         
@@ -154,9 +152,7 @@ simultaneously */
         
         let directions = MKDirections(request: directionsRequest)
         
-        let directions2 = MKDirections(request: directionsRequest)
-        
-        return (directions, directions2)
+        return directions
     }
 
 /* Refresh button action */
@@ -256,8 +252,6 @@ simultaneously */
         let studentID = annotationView.annotation?.title!!
         
         let getDirectionsResult = getDirections(annotationView)
-        let directionsForETA = getDirectionsResult.dir1
-        let directionsForRoutes = getDirectionsResult.dir2
         
         let reqQuery = PFQuery(className: "Request")
         reqQuery.whereKey("objectId", equalTo: studentID!)
@@ -277,13 +271,13 @@ simultaneously */
                 
                 push.setQuery(installationUser)
                 
-                self.getETA(directionsForETA, push: push)
+                self.getETA(getDirectionsResult, push: push)
                 
                 // annotationView.removeFromSuperview()
                 //  annotationView.tintColor = UIColor.greenColor()
             }
         })
-        getRoutes(directionsForRoutes)
+        getRoutes(getDirectionsResult)
     }
     
 /* Drops pins for given requests on map onLoad */
