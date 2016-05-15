@@ -17,7 +17,7 @@ class UserSettingsTableViewController: UITableViewController, UIViewControllerTr
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = "Settings"
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
