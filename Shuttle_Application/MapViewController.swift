@@ -383,6 +383,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         pickUpObject.setObject("\(pickUpLoc.latitude)", forKey: "latitude")
         pickUpObject.setObject("\(pickUpLoc.longitude)", forKey: "longitude")
         pickUpObject.setObject(currentAddress!, forKey: "address")
+        pickUpObject.setObject(false, forKey: "pickedUpAlready")
         let firstName = PFUser.currentUser()?.valueForKey("firstName") as? String
         pickUpObject.setObject(firstName!, forKey: "name")
         
