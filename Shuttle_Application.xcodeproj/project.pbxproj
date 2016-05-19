@@ -306,7 +306,7 @@
 				TargetAttributes = {
 					8CFEC67E1C83B77200C07B76 = {
 						CreatedOnToolsVersion = 7.2.1;
-						DevelopmentTeam = 8PTP855Z68;
+						DevelopmentTeam = FTE8QD3873;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -544,7 +544,7 @@
 				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lu.shuttle-app";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shuttle_Application/Shuttle_Application-Bridging-Header.h";
@@ -566,7 +566,7 @@
 				);
 				INFOPLIST_FILE = Shuttle_Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Lu.shuttle-app";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.bowdoin.shuttleapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shuttle_Application/Shuttle_Application-Bridging-Header.h";

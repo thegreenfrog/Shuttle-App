@@ -132,47 +132,53 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
 /*  Creates a directions object for the driver location and the user location.
 Returns a tuple (two identical objects) to avoid error of using the same directions object for two calculations
 simultaneously */
-    func getDirections(view: MKAnnotationView) -> MKDirections {
+    func getDirections(view: MKAnnotationView) -> (dir1: MKDirections, dir2: MKDirections) {
         
-        let directionsRequest : MKDirectionsRequest = MKDirectionsRequest()
+                let pickupCoordinate = view.annotation?.coordinate
         
-        let driverLat = mapView.userLocation.coordinate.latitude
-        let driverLong = mapView.userLocation.coordinate.longitude
+                let directionsRequest : MKDirectionsRequest = MKDirectionsRequest()
         
-        let requesterLat = view.annotation?.coordinate.latitude
-        let requesterLong = view.annotation?.coordinate.longitude
+                let driverLat = mapView.userLocation.coordinate.latitude
+                let driverLong = mapView.userLocation.coordinate.longitude
         
-        //  directionsRequest.source = mapView.
+                let requesterLat = view.annotation?.coordinate.latitude
+                let requesterLong = view.annotation?.coordinate.longitude
         
-        directionsRequest.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: driverLat, longitude: driverLong), addressDictionary: nil))
+                //  directionsRequest.source = mapView.
         
-        directionsRequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: requesterLat!, longitude: requesterLong!), addressDictionary: nil))
+                directionsRequest.source = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: driverLat, longitude: driverLong), addressDictionary: nil))
         
-        directionsRequest.transportType = .Automobile
+                directionsRequest.destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: requesterLat!, longitude: requesterLong!), addressDictionary: nil))
         
-        let directions = MKDirections(request: directionsRequest)
+                directionsRequest.transportType = .Automobile
         
-        return directions
+                let directions = MKDirections(request: directionsRequest)
+        
+                let directions2 = MKDirections(request: directionsRequest)
+        
+                return (directions, directions2)
     }
-
 /* Refresh button action */
     func tapRefreshButton(){
         print("z")
+        mapView.removeAnnotations(mapView.annotations)
         let query: PFQuery = PFQuery(className: "Request")
+        //query.whereKey("pickedUpAlready", equalTo: false)
+        query.whereKey("pickedUpAlready", equalTo: false)
         
         query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
             
             let object: NSArray = obj! as NSArray
             for x in object {
                 
-                if self.requestDict[x.objectId!!] == nil {
+               // if self.requestDict[x.objectId!!] == nil {
                     let lat = x["latitude"]!!.doubleValue
                     let longit =  x["longitude"]!!.doubleValue
                     let id = x.objectId!!
                     
                     self.dropRequestPins(lat, longitude: longit, requestID: id)
-                    
-                }
+             
+             //   }
                 
             }
             //reload data
@@ -232,6 +238,8 @@ simultaneously */
         
         let query: PFQuery = PFQuery(className: "Request")
         
+        query.whereKey("pickedUpAlready", equalTo: false)
+        
         query.findObjectsInBackgroundWithBlock { (obj, error) -> Void in
             
             let object: NSArray = obj! as NSArray
@@ -249,36 +257,64 @@ simultaneously */
     
 /*Handles driver OK on alertView by querying parse, sending notification w/ ETA, and drawing to map*/
     func handleOK(annotationView: MKAnnotationView){
-        let studentID = annotationView.annotation?.title!!
+                let studentID = annotationView.annotation?.title!!
         
-        let getDirectionsResult = getDirections(annotationView)
+                let getDirectionsResult = getDirections(annotationView)
+                let directionsForETA = getDirectionsResult.dir1
+                let directionsForRoutes = getDirectionsResult.dir2
         
-        let reqQuery = PFQuery(className: "Request")
-        reqQuery.whereKey("objectId", equalTo: studentID!)
-        reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
-            if let req = objects {
-                
-                let userID = req["userObjectId"] as! String
-                
-                let userQuery = PFUser.query()
-                userQuery?.whereKey("objectId", equalTo: userID)
-                
-                let installationUser = PFInstallation.query()
-                
-                installationUser?.whereKey("user", matchesQuery: userQuery!)
-                
-                let push = PFPush()
-                
-                push.setQuery(installationUser)
-                
-                self.getETA(getDirectionsResult, push: push)
-                
-                // annotationView.removeFromSuperview()
-                //  annotationView.tintColor = UIColor.greenColor()
-            }
-        })
-        getRoutes(getDirectionsResult)
-    }
+                let reqQuery = PFQuery(className: "Request")
+                reqQuery.whereKey("objectId", equalTo: studentID!)
+                reqQuery.getFirstObjectInBackgroundWithBlock({ (objects, err) -> Void in
+                    if let req = objects {
+                        
+                        //if person has not yet been picked up
+                        if req["pickedUpAlready"]!.boolValue == false {
+                            
+                            annotationView.removeFromSuperview()
+                            req["pickedUpAlready"] = true
+                            req.saveInBackground()
+                            
+                            let userID = req["userObjectId"] as! String
+                            
+                            let userQuery = PFUser.query()
+                            userQuery?.whereKey("objectId", equalTo: userID)
+                            
+                            let installationUser = PFInstallation.query()
+                            
+                            installationUser?.whereKey("user", matchesQuery: userQuery!)
+                            
+                            let push = PFPush()
+                            
+                            push.setQuery(installationUser)
+                            self.getETA(directionsForETA, push: push)
+                            
+                            self.getRoutes(directionsForRoutes)
+                            
+                        }
+                        else{
+                            annotationView.removeFromSuperview()
+                            //if person has been picked up already:
+                            var alertController = UIAlertController(title: "Student has already been picked up.", message: "Refreshing map.", preferredStyle: .Alert)
+                            
+                            let ok = UIAlertAction(title: "OK", style: .Cancel) { (_) in }
+                            
+                            alertController.addAction(ok)
+                            
+                            self.presentViewController(alertController, animated: true, completion: nil)
+                            
+                            self.mapView.removeAnnotations(self.mapView.annotations)
+                            self.queryParseForPins()
+                            
+                            //removepins
+                            //queryparse for pins
+                            
+                            //refresh ma
+                        }
+                        
+                   }
+               })
+           }
     
 /* Drops pins for given requests on map onLoad */
     func dropRequestPins(latitude: Double, longitude: Double, requestID: String){
@@ -286,7 +322,7 @@ simultaneously */
         
         requestDict[requestID] = 1
         
-        let pin = StopRequest(title: requestID, locationName: "this", coordinate: coordinate)
+        let pin = StopRequest(title: requestID, locationName: "Size: x ", coordinate: coordinate)
         mapView.addAnnotation(pin)
         
     }
