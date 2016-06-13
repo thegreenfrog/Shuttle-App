@@ -64,7 +64,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     func drawScreen() {
         address = UILabel()
         address.numberOfLines = 0
-        
         address.backgroundColor = UIColor.lightGrayColor()
         address.textColor = UIColor.blackColor()
         address.textAlignment = .Center
@@ -81,13 +80,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         screenStackView.alignment = .Fill
         screenStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(screenStackView)
-        let viewHeight = self.view.frame.height - (self.navigationController?.navigationBar.frame.height)!
+        
+        let viewHeight = self.view.frame.height
         mapView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         mapView.heightAnchor.constraintEqualToConstant(viewHeight * 7 / 8).active = true
-        address.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         address.heightAnchor.constraintEqualToConstant(viewHeight * 1 / 8).active = true
         screenStackView.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
-        screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
+        
+       screenStackView.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.tabBarController?.tabBar.frame.height)!).active = true
+
         screenStackView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         
     }
@@ -103,7 +104,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.mapType = .Standard
         mapView.delegate = self
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self.revealViewController(), action: "revealToggle:")
+       // navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self.revealViewController(), action: "revealToggle:")
         
         // Ask for Authorisation from the User.
         locationManager.requestAlwaysAuthorization()

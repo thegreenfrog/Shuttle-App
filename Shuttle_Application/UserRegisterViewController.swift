@@ -118,14 +118,29 @@ class UserRegisterViewController: UIViewController, ModalUserTransitionListener,
     
     func goToApp() {
         //seque to main application
+        
+        
+        
         let mapVC = MapViewController()
-        let navVC = UINavigationController()
-        navVC.viewControllers = [mapVC]
-        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        navVC.navigationBar.tintColor = UIColor.whiteColor()
-        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        navVC.transitioningDelegate = self//allows for custom transition
-        self.presentViewController(navVC, animated: true, completion: nil)
+//        let navVC = UINavigationController()
+//        navVC.viewControllers = [mapVC]
+//        navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+//        navVC.navigationBar.tintColor = UIColor.whiteColor()
+//        navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+//        navVC.transitioningDelegate = self//allows for custom transition
+        
+        let tabBarVC = UITabBarController()
+        let listVC = PickupLocationTableViewController()
+        let controllers = [mapVC, listVC]
+        tabBarVC.viewControllers = controllers
+        let mapImage = UIImage(named: "Map")
+        let listImage = UIImage(named: "List")
+        mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
+        listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
+        
+        self.presentViewController(tabBarVC, animated: true, completion: nil)
+      //  self.presentViewController(navVC, animated: true, completion: nil)
+
         
     }
 

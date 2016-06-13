@@ -40,19 +40,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             //immediately segue to map if user is signed in already
             if(NSUserDefaults.standardUserDefaults().boolForKey("isUser")) {
                 //user
+                
+                
+
+                
+                
+//                
+//                let mapVC = MapViewController()
+//                let navVC = UINavigationController(rootViewController: mapVC)
+//                navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+//                navVC.navigationBar.tintColor = UIColor.whiteColor()
+//                navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+//                
+//                let settingsVC = UserSettingsTableViewController()
+//                let settingsNavVC = UINavigationController(rootViewController: settingsVC)
+//                
+//                let sidebar = SWRevealViewController(rearViewController: settingsNavVC, frontViewController: navVC)
+//                
+//                
+//                self.window?.rootViewController = sidebar
+                
+                
+                //set up application
+                let tabBarVC = UITabBarController()
                 let mapVC = MapViewController()
-                let navVC = UINavigationController(rootViewController: mapVC)
-                navVC.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-                navVC.navigationBar.tintColor = UIColor.whiteColor()
-                navVC.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
                 
-                let settingsVC = UserSettingsTableViewController()
-                let settingsNavVC = UINavigationController(rootViewController: settingsVC)
-                
-                let sidebar = SWRevealViewController(rearViewController: settingsNavVC, frontViewController: navVC)
+                let mapNav = UINavigationController(rootViewController: mapVC)
+                                mapNav.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+                                mapNav.navigationBar.tintColor = UIColor.whiteColor()
+                                mapNav.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+
+                let listVC =  PickupLocationTableViewController() //UITableViewController()
                 
                 
-                self.window?.rootViewController = sidebar
+                let listNav = UINavigationController(rootViewController: listVC)
+                    listNav.navigationBar.barTintColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
+                    listNav.navigationBar.tintColor = UIColor.whiteColor()
+                    listNav.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+                
+                
+                 let controllers = [mapNav, listNav]
+                 tabBarVC.viewControllers = controllers
+                 let mapImage = UIImage(named: "Map")
+                 let listImage = UIImage(named: "List")
+                 mapVC.tabBarItem = UITabBarItem(title: "Route", image: mapImage, tag: 1)
+                 listVC.tabBarItem = UITabBarItem(title: "Queue", image: listImage, tag: 2)
+                 self.window?.rootViewController = tabBarVC
+                 //self.presentViewController(tabBarVC, animated: true, completion: nil)
+ 
             } else {
                 //driver
                 let navVC = UINavigationController()

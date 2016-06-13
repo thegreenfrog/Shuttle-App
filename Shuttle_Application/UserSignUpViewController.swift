@@ -131,6 +131,7 @@ class UserSignUpViewController: UIViewController, UITextFieldDelegate {
         let screenStackView = UIStackView()
         screenStackView.addArrangedSubview(firstNameText)
         screenStackView.addArrangedSubview(lastNameText)
+        screenStackView.addArrangedSubview(emailText)
         screenStackView.addArrangedSubview(passText)
         screenStackView.addArrangedSubview(retypePassText)
         //filler View used to create space between button and textfields

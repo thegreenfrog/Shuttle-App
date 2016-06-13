@@ -46,6 +46,8 @@
 		D071C3911CB46ADE00457514 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C38F1CB46ADE00457514 /* Bolts.framework */; };
 		D071C3921CB46ADE00457514 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D071C3901CB46ADE00457514 /* Parse.framework */; };
 		D071C3951CB699BC00457514 /* DriverRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071C3931CB699BC00457514 /* DriverRegisterViewController.swift */; };
+		D0968ADA1D05F0C000A73B1B /* PickupLocationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0968AD91D05F0C000A73B1B /* PickupLocationTableViewController.swift */; };
+		D0968ADC1D0603C700A73B1B /* PickupLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0968ADB1D0603C600A73B1B /* PickupLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +116,8 @@
 		D071C38F1CB46ADE00457514 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../Frameworks/parse-library-1.12.0/Bolts.framework"; sourceTree = "<group>"; };
 		D071C3901CB46ADE00457514 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Parse.framework; path = "../../Frameworks/parse-library-1.12.0/Parse.framework"; sourceTree = "<group>"; };
 		D071C3931CB699BC00457514 /* DriverRegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverRegisterViewController.swift; sourceTree = "<group>"; };
+		D0968AD91D05F0C000A73B1B /* PickupLocationTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PickupLocationTableViewController.swift; path = ../PickupLocationTableViewController.swift; sourceTree = "<group>"; };
+		D0968ADB1D0603C600A73B1B /* PickupLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickupLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				8CFEC6821C83B77300C07B76 /* AppDelegate.swift */,
+				D0968AD91D05F0C000A73B1B /* PickupLocationTableViewController.swift */,
 				8CFEC6891C83B77400C07B76 /* Assets.xcassets */,
 				D05CD2241CC4290400A3FAC4 /* DriverLoginViewController.swift */,
 				D05CD22C1CC43BD400A3FAC4 /* DriverMapViewController.swift */,
@@ -206,6 +211,7 @@
 				8CFEC6B41C8402FE00C07B76 /* RouteCoord.plist */,
 				8CFEC6B61C84A10100C07B76 /* RoutePath.plist */,
 				8C0A16971CB5ADFC00C09BA9 /* Shuttle_Application-Bridging-Header.h */,
+				D0968ADB1D0603C600A73B1B /* PickupLocation.swift */,
 				8CFEC6B21C83C09200C07B76 /* StopRequest.swift */,
 				8C14A3AC1CE8313C00F531D8 /* SWRevealViewController.h */,
 				8C14A3AD1CE8313C00F531D8 /* SWRevealViewController.m */,
@@ -379,6 +385,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0968ADC1D0603C700A73B1B /* PickupLocation.swift in Sources */,
 				8C0A16961CB5744200C09BA9 /* UIViewExtensions.swift in Sources */,
 				8C0A168E1CB4B00600C09BA9 /* UserRegisterViewController.swift in Sources */,
 				D071C3711CB4581500457514 /* UserLoginViewController.swift in Sources */,
@@ -396,6 +403,7 @@
 				8CFEC6B31C83C09200C07B76 /* StopRequest.swift in Sources */,
 				8C0A169A1CB5ADFD00C09BA9 /* KeychainWrapper.m in Sources */,
 				8C0A16921CB4B76600C09BA9 /* UserSignUpViewController.swift in Sources */,
+				D0968ADA1D05F0C000A73B1B /* PickupLocationTableViewController.swift in Sources */,
 				D05CD22E1CC43BD400A3FAC4 /* DriverMapViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

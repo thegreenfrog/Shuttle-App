@@ -201,10 +201,11 @@ simultaneously */
             
             let seconds  = lroundf(Float(response.expectedTravelTime))
             
-            let mins = (seconds % 3600) / 60
+            let mins =  seconds / 60    //(seconds % 3600) / 60
             
             push.setMessage("A driver will be coming. ETA: \(mins) mins")
             push.sendPushInBackground()
+            
             
             //return mins
         }
@@ -302,6 +303,10 @@ simultaneously */
                             alertController.addAction(ok)
                             
                             self.presentViewController(alertController, animated: true, completion: nil)
+                            
+                            if (!self.mapView.overlays.isEmpty){
+                                self.mapView.removeOverlays(self.mapView.overlays)
+                            }
                             
                             self.mapView.removeAnnotations(self.mapView.annotations)
                             self.queryParseForPins()
