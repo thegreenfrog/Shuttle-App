@@ -12,6 +12,11 @@ import CoreLocation
 import QuartzCore
 import Parse
 
+//protocol PickupLocationTableVCDelegate {
+//    func returnUserSelectedLocation() -> String?
+//}
+
+
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     struct Constants {
@@ -20,6 +25,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         static let MapRadius:CLLocationDistance = 1000
         static let pinImageFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 45, height: 45))
         static let pinLabelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 50))
+        static let Appleton = ("Appleton", CLLocationCoordinate2D(latitude: 43.906982, longitude: -69.962232))
     }
     
     enum MapType: Int {
@@ -27,6 +33,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         case Hybrid
         case Satellite
     }
+    
+    //var dataSourceDelegate: PickupLocationTableVCDelegate?
     
     var geoCoder = CLGeocoder()
     
@@ -43,7 +51,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     var address: UILabel!
     var currentAddress: String?
-    
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last! as CLLocation
@@ -98,11 +105,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Uber Bowdoin"
+        print("ASDSDASDASDASDASDASDSADASDASDASDADASASDA")
         
         drawScreen()
         resetViewLocation = true
         mapView.mapType = .Standard
         mapView.delegate = self
+        
+        
+        
         
        // navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self.revealViewController(), action: "revealToggle:")
         
@@ -148,9 +159,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
         let dropPinGesture = UILongPressGestureRecognizer(target: self, action: Selector("dropPin:"))
         mapView.addGestureRecognizer(dropPinGesture)
         
-        //addRoute()
-        //dropStopLocationPins()
+        
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        if let z = UIApplication.sharedApplication().delegate as? AppDelegate {
+            
+            if let m = z.shouldNotBeDoingThis {
+                print(m)
+            }
+            
+        }
+        
+       // var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
+        
+        
+//            let userDestinationLocation = self.dataSourceDelegate?.returnUserSelectedLocation()
+//            print(userDestinationLocation)
+        }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -378,6 +406,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     //user wants to get picked up at curent center location in map
     func pickUpPerson(sender: UIButton!) {
         let pickUpLoc = self.mapView.centerCoordinate
+        
+        
         
         //let newReq = Request(addr: currentAddress!, loc: pickUpLoc)
         let pickUpObject = PFObject.init(className: "Request")
