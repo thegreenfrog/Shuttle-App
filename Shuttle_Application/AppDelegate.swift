@@ -82,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     listNav.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
                 
                 
-                 let controllers = [mapNav, listNav]
+                 let controllers = [listNav, mapNav ]
                  tabBarVC.viewControllers = controllers
                  let mapImage = UIImage(named: "Map")
                  let listImage = UIImage(named: "List")

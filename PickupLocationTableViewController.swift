@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import CoreLocation
 
-class PickupLocationTableViewController: UITableViewController, UISearchBarDelegate {
+class PickupLocationTableViewController: UITableViewController, UISearchBarDelegate, FooTwoViewControllerDelegate {
+    
+    var delegate:FooTwoViewControllerDelegate! = nil
+
     
     var locationArray = [PickupLocation]()
     
@@ -17,67 +21,45 @@ class PickupLocationTableViewController: UITableViewController, UISearchBarDeleg
     var classVarUserTappedLocation: String?
     
     var searchController: UISearchController?
+    let locationManager = CLLocationManager()
     
     var shouldShowSearchResults = false
     
-    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
-        shouldShowSearchResults = true
-        tableView.reloadData()
+    struct Constants {
+        
+        static let NUMBER_OF_ROWS = 28
     }
     
-    
-    
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        shouldShowSearchResults = false
-        tableView.reloadData()
+    func pickUpUser(){
+        
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        if !shouldShowSearchResults {
-            shouldShowSearchResults = true
-            tableView.reloadData()
-        }
-        
-        self.searchController?.searchBar.resignFirstResponder()
+    func myVCDidFinish(text: String) -> String {
+        return "this"
     }
     
-    func filterContentForSearchText(searchText: String, scope: String = "All") {
-        print(self.searchController?.searchBar.text!)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-     
+        configureSearchController()
         
-        filteredLocations = locationArray.filter({( location) -> Bool in
-            let locationText: NSString = location.name
-            return (locationText.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
-        })
+        //On tap, get user location, send to nearest driver
+   //     delegate!.myVCDidFinish("dsad")
         
         
-//        filteredLocations = locationArray.filter { location in return location.name.lowercaseString.containsString(searchText.lowercaseString)
-//        }
-        tableView.reloadData()
+        initializeLocationArray()
+        
+        navigationItem.title = "Where are you?"
+        
+        tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cellId")
+        tableView.registerClass(Header.self, forHeaderFooterViewReuseIdentifier: "headerId")
+        
+        tableView.sectionHeaderHeight = 50
+        
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //code
-        
-        //switch indexPath
-        
-        switch indexPath.row {
-            case 0:
-                print("52")
-                break
-            case 1:
-                var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                appDelegate.shouldNotBeDoingThis = "Appleton"
-
-                self.tabBarController?.selectedIndex = 0
-                
-                break
-            default:
-                break
-        }
-    }
-
+//MARK -- TableView 
+    
     func initializeLocationArray(){
         
         locationArray.append(PickupLocation(name: "52 Harpswell")!)
@@ -110,54 +92,35 @@ class PickupLocationTableViewController: UITableViewController, UISearchBarDeleg
         locationArray.append(PickupLocation(name: "Winthrop")!)
     }
     
-    func configureSearchController(){
-        
-        let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search here..."
-        searchController.searchBar.delegate = self
-        
-        searchController.dimsBackgroundDuringPresentation = false
-        
-        definesPresentationContext = true
-        
-        tableView.tableHeaderView = searchController.searchBar
-        
-        self.searchController = searchController
-    }
-
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        configureSearchController()
-        
-        
-        initializeLocationArray()
-        
-        navigationItem.title = "Where are you?"
-        
-        tableView.registerClass(CustomCell.self, forCellReuseIdentifier: "cellId")
-        tableView.registerClass(Header.self, forHeaderFooterViewReuseIdentifier: "headerId")
-        
-        tableView.sectionHeaderHeight = 50
-        
-        //Search
-        
-        
-    }
-    
-    struct Constants {
-        
-        static let NUMBER_OF_ROWS = 28
-    }
-    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if shouldShowSearchResults && self.searchController?.searchBar.text! != "" {
             return filteredLocations.count
         }
         else{
             return Constants.NUMBER_OF_ROWS
+        }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        //code
+        
+        //switch indexPath
+        
+        switch indexPath.row {
+        case 0:
+            print("52")
+            break
+        case 1:
+            var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.shouldNotBeDoingThis = "Appleton"
+            
+            // self.presentViewController(transitionView, animated: true, completion: nil)
+            
+            //self.tabBarController?.selectedIndex = 0
+            
+            break
+        default:
+            break
         }
     }
     
@@ -176,23 +139,61 @@ class PickupLocationTableViewController: UITableViewController, UISearchBarDeleg
         }
         
         
-        
-       // let location = locationArray[indexPath.row]
-       // cell.textLabel!.text = location.name
-        
         return cell
-
-        
-//        let cell =  tableView.dequeueReusableCellWithIdentifier("cellId", forIndexPath: indexPath)
-//        
-//        let location = locationArray[indexPath.row]
-//        cell.textLabel!.text = location.name
-//        
-//        return cell
     }
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterViewWithIdentifier("headerId")
+    }
+
+//MARK - SearchController
+    
+    func configureSearchController(){
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search here..."
+        searchController.searchBar.delegate = self
+        
+        searchController.dimsBackgroundDuringPresentation = false
+        
+        definesPresentationContext = true
+        
+        tableView.tableHeaderView = searchController.searchBar
+        
+        self.searchController = searchController
+    }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        shouldShowSearchResults = true
+        tableView.reloadData()
+    }
+    
+    
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        shouldShowSearchResults = false
+        tableView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        if !shouldShowSearchResults {
+            shouldShowSearchResults = true
+            tableView.reloadData()
+        }
+        
+        self.searchController?.searchBar.resignFirstResponder()
+    }
+    
+    func filterContentForSearchText(searchText: String, scope: String = "All") {
+        print(self.searchController?.searchBar.text!)
+        
+        filteredLocations = locationArray.filter({( location) -> Bool in
+            let locationText: NSString = location.name
+            return (locationText.rangeOfString(searchText, options: NSStringCompareOptions.CaseInsensitiveSearch).location) != NSNotFound
+        })
+        
+        tableView.reloadData()
     }
 
 }

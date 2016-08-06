@@ -16,6 +16,9 @@ import Parse
 //    func returnUserSelectedLocation() -> String?
 //}
 
+protocol FooTwoViewControllerDelegate: class {
+    func myVCDidFinish(text:String) -> String
+}
 
 class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -101,6 +104,28 @@ class MapViewController: UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     // MARK: - Lifecycle
+    
+    override func viewDidAppear(animated: Bool) {
+        /*
+        var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        if let location = appDelegate.shouldNotBeDoingThis {
+            
+            var myLocation = CLLocation(latitude: Constants[location].0 , longitude: Constants[location].1)
+            
+            centerMaponLoc(Constants.Appleton.1)
+            
+        }
+        
+        appDelegate.shouldNotBeDoingThis = nil
+        
+         */
+        /*
+         var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+         appDelegate.shouldNotBeDoingThis = "Appleton"
+    */
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

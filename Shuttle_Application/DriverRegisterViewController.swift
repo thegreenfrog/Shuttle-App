@@ -108,6 +108,8 @@ class DriverRegisterViewController: UIViewController, ModalDriverTransitionListe
     
     func goToApp() {
         //seque to main application
+        
+        
         let mapVC = DriverMapViewController()
         mapVC.title = "Uber Driver Bowdoin"
         let navVC = UINavigationController()
