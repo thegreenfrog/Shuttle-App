@@ -9,10 +9,7 @@
 import UIKit
 import CoreLocation
 
-class PickupLocationTableViewController: UITableViewController, UISearchBarDelegate, FooTwoViewControllerDelegate {
-    
-    var delegate:FooTwoViewControllerDelegate! = nil
-
+class PickupLocationTableViewController: UITableViewController, UISearchBarDelegate {
     
     var locationArray = [PickupLocation]()
     
@@ -34,12 +31,9 @@ class PickupLocationTableViewController: UITableViewController, UISearchBarDeleg
         
     }
     
-    func myVCDidFinish(text: String) -> String {
-        return "this"
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         configureSearchController()
         
@@ -106,18 +100,56 @@ class PickupLocationTableViewController: UITableViewController, UISearchBarDeleg
         
         //switch indexPath
         
+        var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
         switch indexPath.row {
         case 0:
-            print("52")
+            appDelegate.shouldNotBeDoingThis = locationArray[0].name
+            self.tabBarController?.selectedIndex = 1
             break
         case 1:
-            var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            appDelegate.shouldNotBeDoingThis = "Appleton"
-            
-            // self.presentViewController(transitionView, animated: true, completion: nil)
-            
-            //self.tabBarController?.selectedIndex = 0
-            
+            appDelegate.shouldNotBeDoingThis = locationArray[1].name
+            self.tabBarController?.selectedIndex = 1
+            break
+        case 2:
+            appDelegate.shouldNotBeDoingThis = locationArray[2].name
+            self.tabBarController?.selectedIndex = 1
+            break
+        case 3:
+            appDelegate.shouldNotBeDoingThis = locationArray[3].name
+            self.tabBarController?.selectedIndex = 1
+            break
+        case 4:
+            appDelegate.shouldNotBeDoingThis = locationArray[4].name
+            self.tabBarController?.selectedIndex = 1
+            break
+        case 5:
+            appDelegate.shouldNotBeDoingThis = locationArray[5].name
+            self.tabBarController?.selectedIndex = 1
+            break
+
+        case 6:
+            appDelegate.shouldNotBeDoingThis = locationArray[6].name
+            self.tabBarController?.selectedIndex = 1
+            break
+
+        case 7:
+            appDelegate.shouldNotBeDoingThis = locationArray[7].name
+            self.tabBarController?.selectedIndex = 1
+            break
+
+        case 8:
+            appDelegate.shouldNotBeDoingThis = locationArray[8].name
+            self.tabBarController?.selectedIndex = 1
+            break
+
+        case 9:
+            appDelegate.shouldNotBeDoingThis = locationArray[9].name
+            self.tabBarController?.selectedIndex = 1
+            break
+        case 10:
+            appDelegate.shouldNotBeDoingThis = locationArray[10].name
+            self.tabBarController?.selectedIndex = 1
             break
         default:
             break
