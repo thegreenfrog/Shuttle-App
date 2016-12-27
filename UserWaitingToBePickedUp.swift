@@ -12,10 +12,6 @@ class  UserWaitingToBePickedUp: UIViewController {
     
     override func viewDidLoad() {
         
-        
-        
-        
-        
     }
     
     

@@ -108,12 +108,21 @@ class DriverMapViewController: UIViewController, MKMapViewDelegate, CLLocationMa
         // For use in foreground
         locationManager.requestWhenInUseAuthorization()
         
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-            locationManager.requestLocation()
-            mapView.showsUserLocation = true
-        }
+        
+        
+//        if CLLocationManager.locationServicesEnabled() {
+//            locationManager.delegate = self
+//            locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+//            locationManager.requestLocation()
+//            mapView.showsUserLocation = true
+//        }
+                print(CLLocationManager.authorizationStatus())
+                if CLLocationManager.locationServicesEnabled() {
+                    locationManager.delegate = self
+                    locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+                    locationManager.requestLocation()
+                    mapView.showsUserLocation = true
+                }
         
         queryParseForPins()
         

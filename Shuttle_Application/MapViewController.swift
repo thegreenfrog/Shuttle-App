@@ -16,36 +16,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     struct Constants {
         static let driverComing = "driverComing"
         static let Brunswick:CLLocation = CLLocation(latitude: 43.9108, longitude: -69.9631)
-        static let MapRadius:CLLocationDistance = 1000
-        static let pinImageFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 45, height: 45))
         static let pinLabelFrame:CGRect = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 200, height: 50))
         static let nameCoordinateHash = ["Appleton": CLLocationCoordinate2D(latitude: 43.906982, longitude: -69.962232)]
     }
-    
-    enum MapType: Int {
-        case Standard = 0
-        case Hybrid
-        case Satellite
-    }
-    
-    //var dataSourceDelegate: PickupLocationTableVCDelegate?
-    
-    var geoCoder = CLGeocoder()
-    
-    var resetViewLocation = true//only recenters user view of map at the start
     
     var loadingIndicator: UIActivityIndicatorView?
     var pinImage: UIImageView?
     var pinLabel: UIButton?
     var timer: NSTimer?
-    var waitingLabelToggle = true
-
-    var waitingView: UIView!
     
+    var waitingLabelToggle = true
+    var waitingView: UIView!
     var waitingOnDriver = false
     
     var address: UILabel!
-    var currentAddress: String?
 
     func drawScreen() {
         address = UILabel()
@@ -67,6 +51,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.view.addSubview(screenStackView)
         
         let viewHeight = self.view.frame.height
+        waitingView.backgroundColor = UIColor.whiteColor()
         waitingView.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor).active = true
         waitingView.heightAnchor.constraintEqualToConstant(viewHeight * 7/8).active = true
 
@@ -89,7 +74,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.title = "Uber Bowdoin"
         
         drawScreen()
-        resetViewLocation = true
         
        // navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Organize, target: self.revealViewController(), action: "revealToggle:")
         
@@ -100,7 +84,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         //create label above pin
         pinLabel = UIButton(frame: Constants.pinLabelFrame)
         pinLabel!.backgroundColor = UIColor(red: 100/255, green: 100/255, blue: 100/255, alpha: 1.0)
-        pinLabel!.setTitle("Set a pickup location", forState: .Normal)
+        pinLabel!.setTitle("Make a request in the Location tab", forState: .Normal)
         pinLabel!.setTitleColor(UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0), forState: .Normal)
         pinLabel!.layer.masksToBounds = true
         pinLabel!.layer.cornerRadius = 10
@@ -109,19 +93,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         pinLabel?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
         pinLabel?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (navigationController?.navigationBar.frame.height)!-40).active = true
         
-        
-        
     }
     
     override func viewWillAppear(animated: Bool) {
-        if let z = UIApplication.sharedApplication().delegate as? AppDelegate {
-            if let m = z.shouldNotBeDoingThis {
+        
+        if let sharedApplicationAppDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+            
+            //only makes a state change if we tapped from the menu
+            if let nameOfDestination = sharedApplicationAppDelegate.shouldNotBeDoingThis {
                 
-                if !waitingOnDriver{
-                    self.address.text = m
-                    pickUpPerson(m)
+                if !waitingOnDriver {
+                    sharedApplicationAppDelegate.shouldNotBeDoingThis = nil
+                    self.address.text = nameOfDestination
+                    
+                    pickUpPerson(nameOfDestination)
+                    
+                    //prevents the finding driver / cancel request state from entering if you simply tab back and forth
                 }
-
+                sharedApplicationAppDelegate.shouldNotBeDoingThis = nil
             }
         }
     }
@@ -131,8 +120,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: - Map Functions
-
     // MARK: - Pin Functions
     
     //helper function that pings nearest drivers until one accepts
@@ -156,12 +143,15 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let getReq = PFQuery(className: "Request")
         getReq.whereKey("userObjectId", equalTo: userId!)
         getReq.orderByDescending("createdAt")
+        
+        self.waitingOnDriver = false
+        waitingOnDriver = false
+        
         getReq.getFirstObjectInBackgroundWithBlock({ (obj, err) -> Void in
             if err != nil {
                 let alert = UIAlertController(title: "Could not cancel", message: "\(err)", preferredStyle: .Alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
-                self.waitingOnDriver = false
                 return
             }
             
@@ -169,7 +159,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 req.deleteInBackgroundWithBlock({ (succ, err) -> Void in
                     if !succ || err != nil {
                         print("delete not successful")
-                        self.waitingOnDriver = false
                         return
                     }
                     let alert = UIAlertController(title: "Cancel Sucessful", message: "", preferredStyle: .Alert)
@@ -180,9 +169,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     self.loadingIndicator?.removeFromSuperview()
                     self.loadingIndicator = nil
                     self.timer?.invalidate()
-                    self.pinLabel!.setTitle("Set a pickup location", forState: .Normal)
+                    self.pinLabel!.setTitle("Make a request in the Location tab", forState: .Normal)
                     self.pinLabel?.removeTarget(self, action: "cancelRequest", forControlEvents: .TouchUpInside)
-                    self.waitingOnDriver = false
                     return
                 })
             }
@@ -224,19 +212,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         })
             //send notification to nearest driver within 10 miles
         
-            self.loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
-            self.loadingIndicator?.userInteractionEnabled = false
-            self.loadingIndicator?.translatesAutoresizingMaskIntoConstraints = false
-            self.loadingIndicator?.startAnimating()
-            self.view.addSubview(self.loadingIndicator!)
-            self.loadingIndicator?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
-            self.loadingIndicator?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
+        self.loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+        self.loadingIndicator?.userInteractionEnabled = false
+        self.loadingIndicator?.translatesAutoresizingMaskIntoConstraints = false
+        self.loadingIndicator?.startAnimating()
+        self.view.addSubview(self.loadingIndicator!)
+        self.loadingIndicator?.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor).active = true
+        self.loadingIndicator?.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor, constant: (self.navigationController?.navigationBar.frame.height)!).active = true
             //send notification to nearest driver within 10 miles
-            waitingOnDriver = true
-            self.findDriver(pickUpLoc!)
-//        })
+        waitingOnDriver = true
+        self.findDriver(pickUpLoc!)
         
-        pinLabel?.fadeOut(1.0, delay: 0.0, completion: { (finished: Bool) -> Void in
+        pinLabel?.fadeOut(1.0, delay: 0.5, completion: { (finished: Bool) -> Void in
             self.pinLabel?.setTitle("Finding Driver", forState: .Disabled)
             self.pinLabel?.setTitle("Tap to Cancel", forState: .Normal)
          //   self.pinLabel?.removeTarget(self, action: "pickUpPersonFromButton:", forControlEvents: .TouchUpInside)
@@ -247,12 +234,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         })
     }
 
-    
+    /*This will probably break once I test it with another phone */
     func driverOnTheWay(notification: NSNotification) {
         print("YOOO")
         pinLabel?.setTitle("Driver on the way!", forState: .Normal)
         print("driver is on the way!")
         waitingOnDriver = false
+        
     }
     
     func showSideBar() {
